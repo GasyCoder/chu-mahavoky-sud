@@ -4,10 +4,10 @@
 
 @include('livewire.pages_home.about')
 
-@include('livewire.pages_home.services')
+@include('livewire.pages_home.blog')
 
 @include('livewire.pages_home.passionate')
 
-@include('livewire.pages_home.services_adm')
+{{-- @include('livewire.pages_home.services_adm') --}}
 
 </div>

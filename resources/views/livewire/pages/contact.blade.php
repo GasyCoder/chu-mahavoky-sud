@@ -46,7 +46,7 @@
         <div class="flex flex-col lg:flex-row gap-10">
             <!-- Coordonnées et informations -->
             <div class="w-full lg:w-1/3" data-aos="fade-right" data-aos-duration="1000">
-                <h2 class="text-3xl font-bold text-dark mb-6">Nos coordonnées</h2>
+                <h2 class="text-xl font-bold text-dark mb-6">Nos coordonnées</h2>
 
                 <!-- Adresse -->
                 <div class="mb-8">
@@ -117,13 +117,7 @@
                             <i class="fab fa-facebook-f"></i>
                         </a>
                         <a href="#" class="w-10 h-10 bg-purple rounded-full flex items-center justify-center text-white hover:bg-turquoise transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-purple rounded-full flex items-center justify-center text-white hover:bg-turquoise transition-colors">
                             <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-purple rounded-full flex items-center justify-center text-white hover:bg-turquoise transition-colors">
-                            <i class="fab fa-instagram"></i>
                         </a>
                     </div>
                 </div>
@@ -131,7 +125,7 @@
 
             <!-- Formulaire de contact et carte -->
             <div class="w-full lg:w-2/3" data-aos="fade-left" data-aos-duration="1000">
-                <h2 class="text-3xl font-bold text-dark mb-6">Envoyez-nous un message</h2>
+                <h2 class="text-xl font-bold text-dark mb-6">Envoyez-nous un message</h2>
 
                 <!-- Formulaire de contact -->
                 <div class="bg-white p-8 rounded-lg shadow-md mb-10">
@@ -203,7 +197,7 @@
             <div class="bg-white rounded-lg shadow-xl overflow-hidden">
                 <div class="flex flex-col lg:flex-row">
                     <div class="lg:w-1/2 p-8 lg:p-12" data-aos="fade-right" data-aos-duration="1000">
-                        <h2 class="text-3xl font-bold text-dark mb-6">Urgences médicales</h2>
+                        <h2 class="text-xl font-bold text-dark mb-6">Urgences médicales</h2>
                         <p class="text-gray-dark mb-6">
                             Notre service d'urgences est ouvert 24h/24 et 7j/7 pour accueillir et traiter toutes les situations médicales urgentes. Une équipe de professionnels qualifiés est toujours présente pour vous prendre en charge rapidement.
                         </p>
@@ -262,8 +256,8 @@
     <!-- FAQ -->
     <section class="container py-16">
         <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="1000">
-            <h2 class="text-3xl font-bold text-dark mb-4">Questions fréquentes</h2>
-            <p class="max-w-3xl mx-auto text-gray-dark">
+            <h2 class="text-xl font-bold text-dark mb-4">Questions fréquentes</h2>
+            <p class="max-w-xl mx-auto text-gray-dark">
                 Retrouvez les réponses aux questions les plus courantes concernant nos services et modalités de contact.
             </p>
         </div>
@@ -318,9 +312,4 @@
             </div>
         </div>
     </section>
-
-    <!-- Bouton retour en haut -->
-    <button id="backToTop" class="fixed bottom-8 right-8 z-50 hidden h-12 w-12 rounded-full bg-purple shadow-lg transition-all duration-300 hover:bg-turquoise">
-        <i class="fas fa-arrow-up text-white"></i>
-    </button>
 </div>

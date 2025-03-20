@@ -74,6 +74,58 @@ document.addEventListener('DOMContentLoaded', function() {
         initCarousels();
         initCharts();
     }, 500);
+
+
+        // Gestion des filtres de catégories
+        const filters = document.querySelectorAll('.service-filter');
+        const services = document.querySelectorAll('[data-category]');
+
+        filters.forEach(filter => {
+            filter.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Reset all filters
+                filters.forEach(f => {
+                    f.classList.remove('bg-purple', 'text-white', 'border-purple');
+                    f.classList.add('bg-white', 'text-dark', 'border-purple/20');
+                });
+
+                // Activate current filter
+                this.classList.remove('bg-white', 'text-dark', 'border-purple/20');
+                this.classList.add('bg-purple', 'text-white', 'border-purple');
+
+                const category = this.getAttribute('href').substring(1);
+
+                // Show/hide services
+                services.forEach(service => {
+                    if (category === 'all' || service.dataset.category === category) {
+                        service.style.display = '';
+                        // Animation
+                        service.classList.add('animate-fadeIn');
+                        setTimeout(() => {
+                            service.classList.remove('animate-fadeIn');
+                        }, 500);
+                    } else {
+                        service.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Gestion des boutons de défilement
+        const scrollLeftBtn = document.getElementById('scroll-left');
+        const scrollRightBtn = document.getElementById('scroll-right');
+        const filterContainer = document.querySelector('.service-filter-container');
+
+        if (scrollLeftBtn && scrollRightBtn && filterContainer) {
+            scrollLeftBtn.addEventListener('click', () => {
+                filterContainer.scrollBy({ left: -200, behavior: 'smooth' });
+            });
+
+            scrollRightBtn.addEventListener('click', () => {
+                filterContainer.scrollBy({ left: 200, behavior: 'smooth' });
+            });
+        }
 });
 
 // Compteurs animés
@@ -485,3 +537,27 @@ function initCharts() {
         }
     }
 }
+
+
+const handleVideo = (checked) => {
+    const iframe = document.querySelector("#video iframe");
+    
+    if (checked) {
+      // Lorsque le modal est ouvert, définir l'URL YouTube avec autoplay=1
+      iframe.src = "https://www.youtube.com/embed/0f49AuWqZiI?autoplay=1";
+      // Rendre le modal cliquable en supprimant la classe pointer-events-none
+      document.querySelector("#video").classList.remove("pointer-events-none");
+    } else {
+      // Lorsque le modal est fermé, supprimer l'URL après un délai
+      setTimeout(() => {
+        iframe.src = "";
+        // Remettre la classe pointer-events-none pour éviter les clics pendant la transition
+        document.querySelector("#video").classList.add("pointer-events-none");
+      }, 1000);
+    }
+  };
+  
+  // Ajouter un écouteur d'événement pour le changement d'état de la checkbox
+  document
+    .getElementById("video-check")
+    .addEventListener("change", (e) => handleVideo(e.target.checked));

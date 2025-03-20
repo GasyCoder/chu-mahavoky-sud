@@ -1,36 +1,54 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CHU Mahavoky</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="font-poppins bg-gray-light text-dark">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-purple shadow-lg">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-white">Admin Panel</h2>
+            </div>
+            <nav class="mt-6">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
+                    <i class="fas fa-tachometer-alt mr-3"></i> Tableau de bord
+                </a>
+                <a href="{{ route('admin.services') }}" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
+                    <i class="fas fa-concierge-bell mr-3"></i> Services
+                </a>
+                <a href="{{ route('profile.edit') }}" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
+                    <i class="fas fa-user mr-3"></i> Profile
+                </a>
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
+                    <i class="fas fa-sign-out-alt mr-3"></i> Déconnexion
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </nav>
+        </aside>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white shadow p-4 flex justify-between items-center">
+                <h2 class="text-xl font-semibold">Tableau de bord</h2>
+                <div class="flex items-center space-x-4">
+                    <span class="text-dark">{{ auth()->user()->name }}</span>
+                    <i class="fas fa-user-circle text-2xl text-purple"></i>
+                </div>
+            </header>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
+            <!-- Content -->
+            <main class="flex-1 p-6 overflow-y-auto">
                 {{ $slot }}
             </main>
         </div>
-    </body>
+    </div>
+    <script src="https://kit.fontawesome.com/b50fc748ca.js" crossorigin="anonymous"></script>
+</body>
 </html>

@@ -83,3 +83,101 @@ body {
   .swiper-pagination {
     /* @apply lg:ml-8; */
   }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Styles pour masquer la scrollbar mais permettre le défilement */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}
+
+
+/* Styles optimisés pour la section des membres de l'équipe */
+
+/* Animation d'entrée pour les cartes des membres */
+@keyframes memberCardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.team-member-card {
+    @apply bg-gray-light rounded-lg overflow-hidden transition-all duration-300 relative;
+    animation: memberCardFadeIn 0.3s ease-out forwards;
+    animation-delay: calc(var(--member-index) * 0.08s);
+    opacity: 0;
+}
+
+.team-member-card:hover {
+    @apply shadow-sm -translate-y-1;
+}
+
+/* Avatar circulaire avec bordure */
+.team-member-avatar {
+    @apply relative mx-auto rounded-full border-2 border-white shadow-sm overflow-hidden;
+    position: relative;
+}
+
+.team-member-avatar img {
+    @apply w-full h-full object-cover;
+}
+
+/* Badge pour les responsables */
+.team-member-lead {
+    @apply relative;
+}
+
+.team-member-lead::before {
+    content: '';
+    @apply absolute inset-0 border border-purple/40 rounded-lg;
+}
+
+/* Ajuster la taille des textes pour l'affichage mobile */
+@media (max-width: 640px) {
+    .team-member-card {
+        @apply mx-auto max-w-xs;
+    }
+
+    .team-member-avatar {
+        width: 80px !important;
+        height: 80px !important;
+    }
+}
+
+/* Style pour les rôles et badges */
+.team-member-role {
+    font-size: 0.65rem;
+    @apply flex items-center;
+}
+
+/* Style réduit pour les sections sur petits écrans */
+@media (max-width: 768px) {
+    .prose h2 {
+        @apply text-xl;
+    }
+
+    .prose .text-base {
+        @apply text-sm;
+    }
+
+    .team-member-card {
+        max-width: 100%;
+    }
+}

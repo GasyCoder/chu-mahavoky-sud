@@ -1,142 +1,185 @@
-<!-- Footer Section -->
-<footer class="bg-gradient-to-r from-purple-dark to-turquoise-dark text-white">
-    <div class="container justify-between py-14">
-      <div class="flex flex-col items-center gap-6 lg:flex-row lg:gap-0">
-        <aside class="text-center lg:text-left">
-          <h3
-            class="font-bold"
-            data-aos="fade-right"
-            data-aos-duration="1000"
-          >
-            Restez informé
-          </h3>
-          <p data-aos="fade-right" data-aos-duration="1000">
-            Inscrivez-vous à notre newsletter
-          </p>
-        </aside>
-
-        <aside class="relative flex w-full lg:ml-auto lg:w-2/4">
-          <input
-            type="text"
-            class="w-full rounded bg-white p-4 text-dark placeholder:text-gray-dark focus:outline-none lg:px-4 lg:py-6"
-            placeholder="Entrez votre email ici"
-            data-aos="fade-left"
-            data-aos-duration="1000"
-          />
-          <div
-            class="absolute bottom-0 right-1 top-0 my-auto flex h-full items-center lg:right-4"
-          >
-            <button
-              class="group relative h-12 w-28 overflow-hidden rounded border-2 border-purple bg-purple text-white transition duration-300 hover:text-purple lg:h-14 lg:w-36"
-              data-aos="fade-left"
-              data-aos-duration="1000"
-              data-aos-delay="300"
-            >
-              <span
-                class="absolute bottom-0 left-0 right-0 top-0 z-10 m-auto inline-flex items-center justify-center"
-                >S'abonner</span
-              >
-              <div
-                class="absolute left-0 top-0 z-0 h-full w-0 rounded-r-full bg-white transition-[width] duration-300 group-hover:w-44"
-              ></div>
-            </button>
+<!-- Footer Section - Redesigned -->
+<footer class="bg-gradient-to-r from-[#2a0a3c] to-[#0d3039] text-white">
+  <!-- Newsletter Section -->
+  <div class="container py-12 border-b border-gray-800">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="text-center md:text-left">
+              <h3 class="text-xl font-bold text-white mb-1">
+                  Restez informé
+              </h3>
+              <p class="text-gray-300 text-sm">
+                  Recevez nos dernières actualités et événements dans votre boîte mail
+              </p>
           </div>
-        </aside>
-      </div>
-    </div>
 
-    <hr class="bg-gray-dark" />
-
-    <div class="container flex flex-col gap-10 py-14 lg:flex-row">
-      <div class="lg:w-4/12">
-        <div class="flex items-center gap-2">
-          <img src="{{ asset('assets/logo.png') }}" alt="Logo CHU" class="w-10 h-10 bg-white rounded-full p-1" />
-          <h5 class="text-white font-bold">CHU Mahavoky Atsimo</h5>
-        </div>
-        <p class="mt-4">
-          Nous sommes dédiés à offrir des soins compatissants et personnalisés pour répondre à vos besoins uniques.
-        </p>
+          <div class="w-full md:w-auto flex-1 max-w-md">
+              <form class="relative">
+                  <input
+                      type="email"
+                      class="w-full rounded-lg bg-gray-800 px-4 py-3 text-white placeholder:text-gray-400 border border-gray-700 focus:outline-none focus:border-turquoise transition"
+                      placeholder="Entrez votre email"
+                      required
+                  />
+                  <button
+                      type="submit"
+                      class="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-gradient-to-r from-purple to-turquoise rounded-md text-white text-sm font-medium hover:opacity-90 transition"
+                  >
+                      S'abonner
+                  </button>
+              </form>
+          </div>
       </div>
-
-      <div>
-        <h6 class="font-bold">Liens rapides</h6>
-        <ul class="mt-4 flex flex-col gap-3">
-          <li><a href="/" class="hover:opacity-75 transition-opacity"> Accueil </a></li>
-          <li><a href="!#" class="hover:opacity-75 transition-opacity"> À propos </a></li>
-          <li><a href="!#" class="hover:opacity-75 transition-opacity"> Services </a></li>
-          <li><a href="!#" class="hover:opacity-75 transition-opacity"> Actualités </a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h6 class="font-bold">Contact</h6>
-        <ul class="mt-4 flex flex-col gap-3">
-          <li class="flex items-center gap-3">
-            <div class="flex aspect-square w-4 items-center justify-center">
-              <i class="fas fa-map-marker-alt"></i>
-            </div>
-            <a href="!#" class="transition hover:opacity-75">
-              Mahavoky Atsimo, Mahajanga, Madagascar
-            </a>
-          </li>
-          <li class="flex items-center gap-3">
-            <div class="flex aspect-square w-4 items-center justify-center">
-              <i class="fas fa-phone rotate-90"></i>
-            </div>
-            <a href="tel:+261340000000" class="transition hover:opacity-75">+261 34 00 000 00</a>
-          </li>
-          <li class="flex items-center gap-3">
-            <div class="flex aspect-square w-4 items-center justify-center">
-              <i class="fas fa-envelope"></i>
-            </div>
-            <a href="mailto:contact@chumahavaky.mg" class="transition hover:opacity-75">
-              contact@chu-mahavokyatsimo.mg
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <div>
-        <h6 class="font-bold">Réseaux sociaux</h6>
-        <ul class="mt-4 flex flex-col gap-3">
-          <li>
-            <a href="!#" class="flex items-center gap-2 transition hover:opacity-60">
-              <div class="flex aspect-square w-5 items-end justify-center rounded bg-white text-purple">
-                <i class="fa fa-facebook"></i>
-              </div>
-              <span class="font-semibold">Facebook</span>
-            </a>
-          </li>
-          <li>
-            <a href="!#" class="flex items-center gap-2 transition hover:opacity-60">
-              <div class="flex aspect-square w-5 items-center justify-center rounded bg-white text-purple">
-                <i class="fa fa-linkedin text-xs"></i>
-              </div>
-              <span class="font-semibold">LinkedIn</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </footer>
-
-  <div class="bg-[#1A1A2E] py-6 text-center text-white">
-    <div class="container mx-auto">
-      <div class="flex flex-col items-center justify-center space-y-2 md:flex-row md:space-y-0 md:space-x-4">
-        <div>
-          Copyright ©<span id="year"></span> CHU Mahavoky Atsimo - Tous droits réservés
-        </div>
-        <div class="flex items-center space-x-4">
-          <a href="!#" class="text-turquoise/80 hover:text-turquoise transition-colors duration-300">
-            Mentions légales
-          </a>
-          <span class="hidden md:inline">|</span>
-          <a href="https://gasycoder.com" target="_blank" class="text-turquoise/80 hover:text-turquoise transition-colors duration-300 flex items-center">
-            <span>Développé par</span>
-            <span class="ml-1 font-semibold">GasyCoder</span>
-          </a>
-        </div>
-      </div>
-    </div>
   </div>
 
+  <!-- Main Footer Content -->
+  <div class="container py-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          <!-- Column 1: About -->
+          <div>
+              <div class="flex items-center gap-2 mb-4">
+                  <img src="{{ asset('assets/logo.png') }}" alt="Logo CHU" class="w-10 h-10 bg-white p-1 rounded-full" />
+                  <h6 class="text-white font-bold">CHU Mahavoky Atsimo</h5>
+              </div>
+              <p class="text-gray-300 text-sm mb-6">
+                  Nous sommes dédiés à offrir des soins compatissants et personnalisés pour répondre à vos besoins uniques.
+              </p>
+              <div class="flex space-x-3">
+                  <a href="#" class="bg-gray-800 hover:bg-gray-700 h-9 w-9 rounded-full flex items-center justify-center transition-colors">
+                      <i class="fab fa-facebook-f text-gray-300"></i>
+                  </a>
+                  <a href="#" class="bg-gray-800 hover:bg-gray-700 h-9 w-9 rounded-full flex items-center justify-center transition-colors">
+                      <i class="fab fa-linkedin-in text-gray-300"></i>
+                  </a>
+              </div>
+          </div>
+
+          <!-- Column 2: Links -->
+          <div>
+              <h6 class="text-white font-bold mb-5 relative inline-block">
+                  Liens rapides
+                  <span class="absolute left-0 bottom-0 w-8 h-0.5 bg-gradient-to-r from-purple to-turquoise"></span>
+              </h6>
+              <ul class="space-y-3">
+                  <li>
+                      <a href="/" class="text-gray-300 hover:text-white transition-colors flex items-center">
+                          <i class="fas fa-chevron-right text-xs mr-2 text-purple"></i> Accueil
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center">
+                          <i class="fas fa-chevron-right text-xs mr-2 text-purple"></i> À propos
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center">
+                          <i class="fas fa-chevron-right text-xs mr-2 text-purple"></i> Services
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center">
+                          <i class="fas fa-chevron-right text-xs mr-2 text-purple"></i> Actualités
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center">
+                          <i class="fas fa-chevron-right text-xs mr-2 text-purple"></i> Contact
+                      </a>
+                  </li>
+              </ul>
+          </div>
+
+          <!-- Column 3: Services -->
+          <div>
+              <h6 class="text-white font-bold mb-5 relative inline-block">
+                  Nos services
+                  <span class="absolute left-0 bottom-0 w-8 h-0.5 bg-gradient-to-r from-purple to-turquoise"></span>
+              </h6>
+              <ul class="space-y-3">
+                  <li>
+                      <a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center">
+                          <i class="fas fa-chevron-right text-xs mr-2 text-turquoise"></i> Consultations
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center">
+                          <i class="fas fa-chevron-right text-xs mr-2 text-turquoise"></i> Urgences
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center">
+                          <i class="fas fa-chevron-right text-xs mr-2 text-turquoise"></i> Médecine générale
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center">
+                          <i class="fas fa-chevron-right text-xs mr-2 text-turquoise"></i> Radiologie
+                      </a>
+                  </li>
+              </ul>
+          </div>
+
+          <!-- Column 4: Contact -->
+          <div>
+              <h6 class="text-white font-bold mb-5 relative inline-block">
+                  Contact
+                  <span class="absolute left-0 bottom-0 w-8 h-0.5 bg-gradient-to-r from-purple to-turquoise"></span>
+              </h6>
+              <ul class="space-y-4">
+                  <li class="flex">
+                      <i class="fas fa-map-marker-alt text-purple mt-1 mr-3"></i>
+                      <span class="text-gray-300">Mahavoky Atsimo, Mahajanga, Madagascar</span>
+                  </li>
+                  <li class="flex">
+                      <i class="fas fa-phone-alt text-purple mt-1 mr-3"></i>
+                      <span class="text-gray-300">
+                          <a href="tel:+261340000000" class="hover:text-white transition-colors">+261 34 00 000 00</a>
+                      </span>
+                  </li>
+                  <li class="flex">
+                      <i class="fas fa-envelope text-purple mt-1 mr-3"></i>
+                      <span class="text-gray-300">
+                          <a href="mailto:contact@chu-mahavokyatsimo.mg" class="hover:text-white transition-colors">contact@chu-mahavokyatsimo.mg</a>
+                      </span>
+                  </li>
+                  <li class="flex">
+                      <i class="fas fa-clock text-purple mt-1 mr-3"></i>
+                      <span class="text-gray-300">
+                          Lun - Ven: 8h00 - 17h00<br>
+                          Urgences: 24h/24, 7j/7
+                      </span>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </div>
+
+<!-- Copyright Section -->
+<div class="bg-gradient-to-r from-black via-[#12121f] to-black py-5">
+  <div class="container text-center md:text-left">
+      <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="text-gray-light text-sm">
+              &copy; <span id="year">2023</span> CHU Mahavoky Atsimo - Tous droits réservés
+          </div>
+          <div class="flex items-center space-x-4 mt-3 md:mt-0">
+              <a href="#" class="text-gray-light hover:text-white text-xs transition-colors">
+                  Mentions légales
+              </a>
+              <span class="text-gray-dark">|</span>
+              <a href="#" class="text-gray-light hover:text-white text-xs transition-colors">
+                  Politique de confidentialité
+              </a>
+              <span class="text-gray-dark">|</span>
+              <a href="https://gasycoder.com" target="_blank" class="text-gray-light hover:text-turquoise text-xs transition-colors flex items-center">
+                  <span>Développé par</span>
+                  <span class="ml-1 font-medium text-turquoise">GasyCoder</span>
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+  <!-- Script pour mettre à jour l'année automatiquement -->
+  <script>
+      document.getElementById('year').innerHTML = new Date().getFullYear();
+  </script>
+</footer>

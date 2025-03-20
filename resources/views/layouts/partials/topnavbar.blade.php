@@ -1,4 +1,4 @@
-<div class="bg-gradient-to-r from-purple/60 to-turquoise/80 py-3 text-white">
+<div class="bg-gradient-to-r from-[#2a0a3c] to-[#0d3039] text-white py-3">
     <div class="container">
       <div class="flex items-center justify-center lg:justify-between">
         <div class="flex items-center gap-2 lg:gap-6">
