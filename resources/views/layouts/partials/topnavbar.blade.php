@@ -4,37 +4,42 @@
         <div class="flex items-center gap-2 lg:gap-6">
           <div class="flex items-center gap-2">
             <i class="fa fa-envelope-open"></i>
-            <a href="mailto:support@raddito.com" class="font-poppins text-sm"
-              >contact@chu-mahavoky-atsimo.mg</a
-            >
+            <a href="mailto:{{ $settings['contact']['email'] }}" class="font-poppins text-sm">
+              {{ $settings['contact']['email'] }}
+            </a>
           </div>
 
           <div class="flex items-center gap-2">
             <i class="fa fa-phone rotate-90"></i>
-            <a href="callto:+261 34 30 310 30" class="font-poppins text-sm">
-              +261 34 30 310 30</a
-            >
+            <a href="tel:{{ $settings['contact']['phone'] }}" class="font-poppins text-sm">
+              {{ $settings['contact']['phone'] }}
+            </a>
           </div>
         </div>
 
-        <ul
-          class="hidden items-center divide-x divide-white text-base lg:flex"
-        >
+        <ul class="hidden items-center divide-x divide-white text-base lg:flex">
           <li class="px-3">Suivre</li>
+          @if($settings['social']['facebook'])
           <li class="flex items-center px-3">
-            <a href="!#">
-              <i
-                class="fab fa-facebook hover:text-secondary text-base transition"
-              ></i>
+            <a href="{{ $settings['social']['facebook'] }}" target="_blank">
+              <i class="fab fa-facebook hover:text-secondary text-base transition"></i>
             </a>
           </li>
+          @endif
+          @if($settings['social']['linkedin'])
           <li class="flex items-center px-3">
-            <a href="!#">
-              <i
-                class="fab fa-linkedin hover:text-secondary text-base transition"
-              ></i>
+            <a href="{{ $settings['social']['linkedin'] }}" target="_blank">
+              <i class="fab fa-linkedin hover:text-secondary text-base transition"></i>
             </a>
           </li>
+          @endif
+          @if($settings['social']['twitter'])
+          <li class="flex items-center px-3">
+            <a href="{{ $settings['social']['twitter'] }}" target="_blank">
+              <i class="fab fa-twitter hover:text-secondary text-base transition"></i>
+            </a>
+          </li>
+          @endif
         </ul>
       </div>
     </div>

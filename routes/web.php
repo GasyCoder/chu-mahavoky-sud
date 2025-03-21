@@ -1,10 +1,14 @@
 <?php
 
 use App\Livewire\HomePage;
+use App\Livewire\Pages\News;
 use App\Livewire\Pages\About;
 use App\Livewire\Pages\Contact;
+use App\Livewire\Admin\Settings;
 use App\Livewire\Pages\Services;
+use App\Livewire\Admin\BlogAdmin;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Pages\NewsDetail;
 use App\Livewire\Admin\ServicesAdmin;
 use App\Livewire\Pages\ServiceDetail;
 use Illuminate\Support\Facades\Route;
@@ -13,16 +17,23 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', HomePage::class)->name('home');
 
 Route::get('/a-propos', About::class)->name('about');
-Route::get('/nos-services', Services::class)->name('services');
 Route::get('/contact', Contact::class)->name('contact');
 
+Route::get('/nos-services', Services::class)->name('services');
 Route::get('/nos-services/{service}', ServiceDetail::class)->name('services.show');
+
+Route::get('/nos-actualites', News::class)->name('news');
+Route::get('/nos-actualites/{news}', NewsDetail::class)->name('news.show');
 
 Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/dashboard', Dashboard::class)->name('admin.dashboard');
 
     Route::get('/admin/services', ServicesAdmin::class)->name('admin.services');
+
+    Route::get('/admin/actualites', BlogAdmin::class)->name('admin.news');
+
+    Route::get('/admin/parametre', Settings::class)->name('admin.setting');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

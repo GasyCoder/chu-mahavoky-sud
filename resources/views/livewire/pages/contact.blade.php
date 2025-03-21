@@ -34,7 +34,7 @@
                 <div class="ml-3">
                     <h3 class="text-lg font-medium text-purple">Urgences médicales</h3>
                     <div class="mt-2 text-sm text-gray-dark">
-                        <p>Pour toute urgence médicale, appelez immédiatement le <a href="tel:+261340000000" class="font-semibold text-purple">+261 34 00 000 00</a> ou rendez-vous directement au service des urgences du CHU Mahavoky Atsimo.</p>
+                        <p>Pour toute urgence médicale, appelez immédiatement le <a href="tel:{{ $settings['contact']['emergency'] }}" class="font-semibold text-purple">{{ $settings['contact']['emergency'] }}</a> ou rendez-vous directement au service des urgences du {{ $settings['site_name'] }}.</p>
                     </div>
                 </div>
             </div>
@@ -56,9 +56,8 @@
                         </div>
                         <div>
                             <h3 class="font-semibold text-dark text-lg mb-1">Adresse</h3>
-                            <p class="text-gray-dark">CHU Mahavoky Atsimo</p>
-                            <p class="text-gray-dark">Mahavoky Atsimo, Mahajanga</p>
-                            <p class="text-gray-dark">Madagascar</p>
+                            <p class="text-gray-dark">{{ $settings['site_name'] }}</p>
+                            <p class="text-gray-dark">{{ $settings['contact']['address'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -71,9 +70,8 @@
                         </div>
                         <div>
                             <h3 class="font-semibold text-dark text-lg mb-1">Téléphone</h3>
-                            <p class="text-gray-dark">Accueil: <a href="tel:+261340000000" class="text-purple hover:text-turquoise transition-colors">+261 34 00 000 00</a></p>
-                            <p class="text-gray-dark">Urgences (24h/24): <a href="tel:+261340000001" class="text-purple hover:text-turquoise transition-colors">+261 34 00 000 01</a></p>
-                            <p class="text-gray-dark">Rendez-vous: <a href="tel:+261340000002" class="text-purple hover:text-turquoise transition-colors">+261 34 00 000 02</a></p>
+                            <p class="text-gray-dark">Accueil: <a href="tel:{{ $settings['contact']['phone'] }}" class="text-purple hover:text-turquoise transition-colors">{{ $settings['contact']['phone'] }}</a></p>
+                            <p class="text-gray-dark">Urgences (24h/24): <a href="tel:{{ $settings['contact']['emergency'] }}" class="text-purple hover:text-turquoise transition-colors">{{ $settings['contact']['emergency'] }}</a></p>
                         </div>
                     </div>
                 </div>
@@ -86,9 +84,8 @@
                         </div>
                         <div>
                             <h3 class="font-semibold text-dark text-lg mb-1">Email</h3>
-                            <p class="text-gray-dark">Informations générales: <a href="mailto:contact@chumahavaky.mg" class="text-purple hover:text-turquoise transition-colors">contact@chumahavaky.mg</a></p>
-                            <p class="text-gray-dark">Rendez-vous: <a href="mailto:rdv@chumahavaky.mg" class="text-purple hover:text-turquoise transition-colors">rdv@chumahavaky.mg</a></p>
-                            <p class="text-gray-dark">Direction: <a href="mailto:direction@chumahavaky.mg" class="text-purple hover:text-turquoise transition-colors">direction@chumahavaky.mg</a></p>
+                            <p class="text-gray-dark">Informations générales: <a href="mailto:{{ $settings['contact']['email'] }}" class="text-purple hover:text-turquoise transition-colors">{{ $settings['contact']['email'] }}</a></p>
+                            <p class="text-gray-dark">Direction: <a href="mailto:{{ $settings['contact']['direction_email'] }}" class="text-purple hover:text-turquoise transition-colors">{{ $settings['contact']['direction_email'] }}</a></p>
                         </div>
                     </div>
                 </div>
@@ -101,10 +98,9 @@
                         </div>
                         <div>
                             <h3 class="font-semibold text-dark text-lg mb-1">Horaires d'ouverture</h3>
-                            <p class="text-gray-dark">Consultations: Lundi au vendredi, 8h - 16h</p>
-                            <p class="text-gray-dark">Laboratoire: Lundi au samedi, 7h - 18h</p>
+                            <p class="text-gray-dark">{{ $settings['hours']['weekdays'] }}</p>
+                            <p class="text-gray-dark">{{ $settings['hours']['weekend'] }}</p>
                             <p class="text-gray-dark">Urgences: 24h/24, 7j/7</p>
-                            <p class="text-gray-dark">Admissions: Lundi au vendredi, 8h - 16h</p>
                         </div>
                     </div>
                 </div>
@@ -113,12 +109,29 @@
                 <div class="mt-10">
                     <h3 class="font-semibold text-dark text-lg mb-4">Suivez-nous</h3>
                     <div class="flex space-x-3">
-                        <a href="#" class="w-10 h-10 bg-purple rounded-full flex items-center justify-center text-white hover:bg-turquoise transition-colors">
+                        @if($settings['social']['facebook'])
+                        <a href="{{ $settings['social']['facebook'] }}" class="w-10 h-10 bg-purple rounded-full flex items-center justify-center text-white hover:bg-turquoise transition-colors">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-purple rounded-full flex items-center justify-center text-white hover:bg-turquoise transition-colors">
+                        @endif
+
+                        @if($settings['social']['twitter'])
+                        <a href="{{ $settings['social']['twitter'] }}" class="w-10 h-10 bg-purple rounded-full flex items-center justify-center text-white hover:bg-turquoise transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        @endif
+
+                        @if($settings['social']['linkedin'])
+                        <a href="{{ $settings['social']['linkedin'] }}" class="w-10 h-10 bg-purple rounded-full flex items-center justify-center text-white hover:bg-turquoise transition-colors">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
+                        @endif
+
+                        @if($settings['social']['youtube'])
+                        <a href="{{ $settings['social']['youtube'] }}" class="w-10 h-10 bg-purple rounded-full flex items-center justify-center text-white hover:bg-turquoise transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -129,55 +142,7 @@
 
                 <!-- Formulaire de contact -->
                 <div class="bg-white p-8 rounded-lg shadow-md mb-10">
-                    <form>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label for="name" class="block text-dark mb-2">Nom complet <span class="text-purple">*</span></label>
-                                <input type="text" id="name" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none" required>
-                            </div>
-                            <div>
-                                <label for="email" class="block text-dark mb-2">Email <span class="text-purple">*</span></label>
-                                <input type="email" id="email" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-6">
-                            <label for="phone" class="block text-dark mb-2">Téléphone</label>
-                            <input type="tel" id="phone" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none">
-                        </div>
-
-                        <div class="mb-6">
-                            <label for="subject" class="block text-dark mb-2">Sujet <span class="text-purple">*</span></label>
-                            <select id="subject" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none" required>
-                                <option value="">Sélectionnez un sujet</option>
-                                <option value="info">Demande d'informations</option>
-                                <option value="appointment">Rendez-vous</option>
-                                <option value="careers">Carrières</option>
-                                <option value="feedback">Commentaires</option>
-                                <option value="other">Autre</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-6">
-                            <label for="message" class="block text-dark mb-2">Message <span class="text-purple">*</span></label>
-                            <textarea id="message" rows="6" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none" required></textarea>
-                        </div>
-
-                        <div class="mb-6">
-                            <div class="flex items-start">
-                                <div class="flex items-center h-5">
-                                    <input id="privacy" type="checkbox" class="w-4 h-4 rounded border border-gray focus:ring-purple" required>
-                                </div>
-                                <label for="privacy" class="ml-2 text-sm text-gray-dark">
-                                    J'accepte que mes données soient traitées conformément à la politique de confidentialité du CHU Mahavoky Atsimo.
-                                </label>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-gradient-to-r from-purple to-turquoise text-white py-3 rounded-md hover:opacity-90 transition-opacity font-medium">
-                            Envoyer le message
-                        </button>
-                    </form>
+                    @livewire('contact-form')
                 </div>
 
                 <!-- Carte -->
@@ -229,7 +194,7 @@
                         </div>
 
                         <div class="mt-8">
-                            <a href="tel:+261340000001" class="inline-flex items-center justify-center gap-2 bg-purple text-white px-6 py-3 rounded-md hover:bg-turquoise transition-colors font-medium">
+                            <a href="tel:{{ $settings['contact']['emergency'] }}" class="inline-flex items-center justify-center gap-2 bg-purple text-white px-6 py-3 rounded-md hover:bg-turquoise transition-colors font-medium">
                                 <i class="fas fa-phone-alt"></i>
                                 Appeler les urgences
                             </a>
@@ -242,7 +207,7 @@
                             <div class="text-center p-6">
                                 <div class="bg-white/90 rounded-lg p-6 max-w-md mx-auto">
                                     <h3 class="text-2xl font-bold text-purple mb-3">Numéro d'urgence</h3>
-                                    <p class="text-4xl font-bold text-purple mb-4">+261 34 00 000 01</p>
+                                    <p class="text-4xl font-bold text-purple mb-4">{{ $settings['contact']['emergency'] }}</p>
                                     <p class="text-gray-dark">Notre équipe d'urgence est disponible 24h/24 et 7j/7 pour vous porter assistance.</p>
                                 </div>
                             </div>
@@ -270,7 +235,7 @@
                 </button>
                 <div x-show="open" class="px-6 pb-6">
                     <p class="text-gray-dark">
-                        Vous pouvez prendre rendez-vous par téléphone au +261 34 00 000 02, en vous présentant directement au bureau des rendez-vous dans le hall principal du CHU, ou en envoyant un email à rdv@chumahavaky.mg en précisant votre nom, la spécialité souhaitée et vos disponibilités.
+                        Vous pouvez prendre rendez-vous par téléphone au {{ $settings['contact']['phone'] }}, en vous présentant directement au bureau des rendez-vous dans le hall principal du {{ $settings['site_name'] }}, ou en envoyant un email à {{ $settings['contact']['email'] }} en précisant votre nom, la spécialité souhaitée et vos disponibilités.
                     </p>
                 </div>
             </div>
@@ -306,7 +271,7 @@
                 </button>
                 <div x-show="open" class="px-6 pb-6">
                     <p class="text-gray-dark">
-                        Pour toute réclamation ou suggestion, vous pouvez remplir le formulaire disponible à l'accueil du CHU, envoyer un email à contact@chumahavaky.mg, ou utiliser le formulaire de contact sur cette page. Toutes les réclamations sont traitées avec la plus grande attention.
+                        Pour toute réclamation ou suggestion, vous pouvez remplir le formulaire disponible à l'accueil du {{ $settings['site_name'] }}, envoyer un email à {{ $settings['contact']['email'] }}, ou utiliser le formulaire de contact sur cette page. Toutes les réclamations sont traitées avec la plus grande attention.
                     </p>
                 </div>
             </div>

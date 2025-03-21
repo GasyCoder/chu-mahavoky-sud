@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\Models\ServiceCategory;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Services extends Component
 {
@@ -39,33 +40,53 @@ class Services extends Component
 
     public function render()
     {
-        // Récupération des catégories selon le type (médical ou administratif)
-        $isMedical = $this->activeTab === 'medical';
-
-        $categories = ServiceCategory::where('is_medical', $isMedical)
+        // Données pour les services médicaux
+        $medicalCategories = ServiceCategory::where('is_medical', true)
             ->where('active', true)
             ->orderBy('order')
             ->get();
 
-        // Construction de la requête pour les services
-        $servicesQuery = Service::query()
+        $medicalServicesQuery = Service::query()
             ->with('category')
-            ->whereHas('category', function($query) use ($isMedical) {
-                $query->where('is_medical', $isMedical);
+            ->whereHas('category', function($query) {
+                $query->where('is_medical', true);
             })
             ->where('active', true);
 
-        // Filtrage par catégorie si une est sélectionnée
-        if ($this->selectedCategoryId) {
-            $servicesQuery->where('category_id', $this->selectedCategoryId);
+        if ($this->activeTab === 'medical' && $this->selectedCategoryId) {
+            $medicalServicesQuery->where('category_id', $this->selectedCategoryId);
         }
 
-        // Récupération des services avec pagination
-        $services = $servicesQuery->orderBy('order')->paginate(9);
+        $medicalServices = $this->activeTab === 'medical'
+            ? $medicalServicesQuery->orderBy('order')->paginate(9)
+            : new LengthAwarePaginator([], 0, 9); // Retourne un paginateur vide
+
+        // Données pour les services administratifs
+        $adminCategories = ServiceCategory::where('is_medical', false)
+            ->where('active', true)
+            ->orderBy('order')
+            ->get();
+
+        $adminServicesQuery = Service::query()
+            ->with('category')
+            ->whereHas('category', function($query) {
+                $query->where('is_medical', false);
+            })
+            ->where('active', true);
+
+        if ($this->activeTab === 'admin' && $this->selectedCategoryId) {
+            $adminServicesQuery->where('category_id', $this->selectedCategoryId);
+        }
+
+        $adminServices = $this->activeTab === 'admin'
+            ? $adminServicesQuery->orderBy('order')->paginate(9)
+            : new LengthAwarePaginator([], 0, 9); // Retourne un paginateur vide
 
         return view('livewire.pages.services', [
-            'categories' => $categories,
-            'services' => $services
+            'medicalCategories' => $medicalCategories,
+            'medicalServices' => $medicalServices,
+            'adminCategories' => $adminCategories,
+            'adminServices' => $adminServices,
         ])->layout('layouts.front');
     }
 }

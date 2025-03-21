@@ -1,93 +1,94 @@
-<!-- Section "À la une" redesignée -->
-<section class="py-10 bg-white relative">
-    <!-- Lignes de séparation décoratives -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute left-0 top-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-        <div class="absolute left-1/4 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gray-100 to-transparent opacity-70"></div>
-        <div class="absolute right-1/4 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gray-100 to-transparent opacity-70"></div>
-    </div>
-
-    <div class="container relative">
-        <!-- En-tête de section plus sobre -->
-        <div class="mb-8 flex items-center justify-between">
-            <div>
-                <h3 class="text-xl font-semibold text-dark relative inline-block">
-                    À la une
-                    <span class="absolute -bottom-1 left-0 w-12 h-0.5 bg-purple"></span>
-                </h3>
-                <p class="text-gray-600 mt-1">Actualités et événements importants</p>
+<!-- Section "À la une" avec design UI/UX optimisé et responsive -->
+<section class="bg-white py-16 sm:py-20">
+    <div class="container">
+        <!-- En-tête de section avec animation subtile -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 sm:mb-12">
+            <div class="group">
+                <div class="flex items-center">
+                    <div class="w-1.5 h-6 bg-gradient-to-b from-purple to-turquoise rounded-full mr-3 transition-all duration-300 group-hover:h-8"></div>
+                    <h2 class="text-xl font-bold text-dark">À la une</h2>
+                </div>
+                <p class="text-gray-dark mt-2 ml-4 max-w-lg">Actualités et événements importants de notre établissement</p>
             </div>
-            
-            <a href="!#" class="text-purple text-sm font-medium hover:text-purple-dark transition-colors flex items-center">
-                Toutes les actualités
-                <i class="fas fa-chevron-right ml-1 text-xs"></i>
+
+            <!-- Bouton "Toutes les actualités" avec animation au survol -->
+            <a href="{{ route('news') }}" class="group inline-flex items-center mt-4 sm:mt-0 px-4 py-2 rounded-full text-sm font-medium text-purple hover:text-white border border-purple hover:bg-purple transition-all duration-300">
+                <span>Toutes les actualités</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
             </a>
         </div>
-        
-        <!-- Grille d'articles plus compacte -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <!-- Article 1 -->
-            <article class="bg-white border border-gray-100 rounded overflow-hidden group hover:shadow-md transition-shadow">
-                <div class="h-44 overflow-hidden relative">
-                    <img src="{{ asset('assets/news/actualite1.jpg') }}" alt="Journée mondiale de la santé" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute top-0 right-0 m-3">
-                        <span class="bg-purple/90 text-white px-2 py-1 text-xs rounded-sm">Événement</span>
+
+        <!-- Grille d'articles avec animation au chargement de la page -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            @forelse($latestNews as $article)
+                <!-- Article -->
+                <article class="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 border border-gray flex flex-col h-full transform hover:-translate-y-1">
+                    <!-- Image avec overlay au survol -->
+                    <div class="relative overflow-hidden aspect-video">
+                        <img
+                            src="{{ $article->image_url }}"
+                            alt="{{ $article->title }}"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+
+                        <!-- Badge flottant -->
+                        <div class="absolute top-3 left-3 z-10">
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-{{ $article->category_color }} text-white shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    {!! $article->category_icon !!}
+                                </svg>
+                                {{ $article->category }}
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="p-4">
-                    <div class="text-gray-500 text-xs mb-2 flex items-center">
-                        <i class="far fa-calendar-alt mr-1"></i>
-                        23 mars 2025
+
+                    <!-- Contenu avec espacement optimisé -->
+                    <div class="p-5 flex flex-col flex-grow">
+                        <!-- Date avec icône plus lisible -->
+                        <div class="flex items-center text-gray-dark text-sm mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <time datetime="{{ $article->published_at->format('Y-m-d') }}">{{ $article->published_at->format('d M Y') }}</time>
+                        </div>
+
+                        <!-- Titre avec effet de transition -->
+                        <h3 class="font-bold text-sm text-dark group-hover:text-{{ $article->category == 'Service' ? 'turquoise' : 'purple' }} transition-colors duration-300 mb-3 line-clamp-2">
+                            {{ $article->title }}
+                        </h3>
+
+                        <!-- Résumé avec meilleure lisibilité -->
+                        <p class="text-gray-dark text-sm leading-relaxed mb-5 line-clamp-3 flex-grow">
+                            {{ $article->excerpt }}
+                        </p>
+
+                        <!-- CTA plus visible -->
+                        <a href="{{ route('news.show', $article->slug) }}" class="inline-flex items-center font-medium text-{{ $article->category == 'Service' ? 'turquoise' : 'purple' }} hover:text-{{ $article->category == 'Service' ? 'turquoise' : 'purple' }}-dark transition-colors mt-auto group/link">
+                            <span>{{ $article->category == 'Service' ? 'En savoir plus' : ($article->category == 'Équipement' ? 'Découvrir' : 'Lire plus') }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 transform group-hover/link:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
                     </div>
-                    <h4 class="font-medium text-dark mb-2 line-clamp-2">Journée mondiale de la santé</h4>
-                    <p class="text-gray-600 text-sm line-clamp-3 mb-3">Notre établissement organise une journée portes ouvertes avec consultations gratuites et ateliers de sensibilisation.</p>
-                    <a href="#" class="text-purple text-sm font-medium hover:text-purple-dark transition-colors">
-                        Lire plus
-                    </a>
+                </article>
+            @empty
+                <!-- Message si aucune actualité disponible -->
+                <div class="col-span-full py-10 text-center">
+                    <p class="text-gray-dark">Aucune actualité disponible pour le moment.</p>
                 </div>
-            </article>
-            
-            <!-- Article 2 -->
-            <article class="bg-white border border-gray-100 rounded overflow-hidden group hover:shadow-md transition-shadow">
-                <div class="h-44 overflow-hidden relative">
-                    <img src="{{ asset('assets/news/service1.jpg') }}" alt="Nouveau service de neurologie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute top-0 right-0 m-3">
-                        <span class="bg-turquoise/90 text-white px-2 py-1 text-xs rounded-sm">Service</span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="text-gray-500 text-xs mb-2 flex items-center">
-                        <i class="far fa-calendar-alt mr-1"></i>
-                        15 mars 2025
-                    </div>
-                    <h4 class="font-medium text-dark mb-2 line-clamp-2">Ouverture du service de neurologie</h4>
-                    <p class="text-gray-600 text-sm line-clamp-3 mb-3">Notre équipe s'agrandit avec l'arrivée d'un service complet dédié aux pathologies neurologiques.</p>
-                    <a href="#" class="text-turquoise text-sm font-medium hover:text-turquoise-dark transition-colors">
-                        En savoir plus
-                    </a>
-                </div>
-            </article>
-            
-            <!-- Article 3 -->
-            <article class="bg-white border border-gray-100 rounded overflow-hidden group hover:shadow-md transition-shadow">
-                <div class="h-44 overflow-hidden relative">
-                    <img src="{{ asset('assets/news/equipement1.jpg') }}" alt="Équipement d'imagerie médicale" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute top-0 right-0 m-3">
-                        <span class="bg-purple/90 text-white px-2 py-1 text-xs rounded-sm">Équipement</span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <div class="text-gray-500 text-xs mb-2 flex items-center">
-                        <i class="far fa-calendar-alt mr-1"></i>
-                        10 mars 2025
-                    </div>
-                    <h4 class="font-medium text-dark mb-2 line-clamp-2">Nouvel équipement d'imagerie médicale</h4>
-                    <p class="text-gray-600 text-sm line-clamp-3 mb-3">Le CHU renforce ses capacités diagnostiques avec l'acquisition d'un scanner de dernière génération.</p>
-                    <a href="#" class="text-purple text-sm font-medium hover:text-purple-dark transition-colors">
-                        Découvrir
-                    </a>
-                </div>
-            </article>
+            @endforelse
         </div>
+
+        <!-- Pagination mobile améliorée - uniquement si 3 articles sont présents -->
+        @if($latestNews->count() == 3)
+            <div class="flex justify-center items-center gap-2 mt-8 md:hidden">
+                <button class="w-2.5 h-2.5 rounded-full bg-purple ring-2 ring-gray-light"></button>
+                <button class="w-2 h-2 rounded-full bg-gray hover:bg-purple-light transition-colors"></button>
+                <button class="w-2 h-2 rounded-full bg-gray hover:bg-purple-light transition-colors"></button>
+            </div>
+        @endif
     </div>
 </section>

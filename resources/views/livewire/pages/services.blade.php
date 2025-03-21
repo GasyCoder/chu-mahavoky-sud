@@ -31,10 +31,10 @@
         <!-- Navigation par onglets -->
         <div class="mb-6 border-b border-gray" data-aos="fade-up" data-aos-duration="1000">
             <div class="flex flex-wrap -mb-px">
-                <button id="tab-medical" onclick="switchTab('medical')" class="text-center py-4 px-6 text-lg font-medium border-b-2 border-purple text-purple">
+                <button wire:click="switchTab('medical')" class="text-center py-4 px-6 text-lg font-medium border-b-2 {{ $activeTab === 'medical' ? 'border-purple text-purple' : 'border-transparent text-gray-dark hover:text-purple' }}">
                     <i class="fas fa-stethoscope mr-2"></i>Services Médicaux
                 </button>
-                <button id="tab-admin" onclick="switchTab('admin')" class="text-center py-4 px-6 text-lg font-medium border-b-2 border-transparent text-gray-dark hover:text-purple">
+                <button wire:click="switchTab('admin')" class="text-center py-4 px-6 text-lg font-medium border-b-2 {{ $activeTab === 'admin' ? 'border-purple text-purple' : 'border-transparent text-gray-dark hover:text-purple' }}">
                     <i class="fas fa-briefcase mr-2"></i>Services Administratifs
                 </button>
             </div>
@@ -42,4 +42,5 @@
         @include('livewire.pages.services.medicale')
         @include('livewire.pages.services.administratif')
     </section>
+
  </div>

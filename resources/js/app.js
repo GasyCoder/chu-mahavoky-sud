@@ -32,6 +32,52 @@ window.switchTab = function(tabName) {
     }
 };
 
+// Fonction pour gérer le menu mobile
+function initMobileMenu() {
+    // Sélection des éléments du menu mobile
+    const menuToggle = document.getElementById('menu-toggle');
+    const closeMenu = document.getElementById('close-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    const mobileContent = document.getElementById('mobile-content');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+    
+    // Si les éléments n'existent pas, on sort de la fonction
+    if (!menuToggle || !mobileMenu) return;
+    
+    // Fonction pour ouvrir le menu
+    function openMenu() {
+      mobileMenu.classList.remove('hidden');
+      // Petit délai pour permettre la transition
+      setTimeout(() => {
+        mobileContent.classList.remove('translate-x-full');
+      }, 10);
+      document.body.classList.add('overflow-hidden'); // Empêcher le défilement
+    }
+    
+    // Fonction pour fermer le menu
+    function closeMenuFunc() {
+      mobileContent.classList.add('translate-x-full');
+      // Attendre la fin de l'animation avant de cacher complètement
+      setTimeout(() => {
+        mobileMenu.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }, 300);
+    }
+    
+    // Écouteurs d'événements
+    menuToggle.addEventListener('click', openMenu);
+    closeMenu.addEventListener('click', closeMenuFunc);
+    mobileOverlay.addEventListener('click', closeMenuFunc);
+    
+    // Fermer le menu au clic sur un lien
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        closeMenuFunc();
+      });
+    });
+  }
+
 // Fonction unique d'initialisation principale
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisation d'AOS pour les animations
@@ -39,6 +85,40 @@ document.addEventListener('DOMContentLoaded', function() {
         once: true,
         duration: 800,
         offset: 50
+    });
+
+    initMobileMenu();
+
+
+    const filterButtons = document.querySelectorAll('.service-filter');
+    const serviceCards = document.querySelectorAll('[data-category]');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            filterButtons.forEach(btn => {
+                btn.classList.remove('bg-purple', 'text-white', 'border-purple');
+                btn.classList.add('bg-white', 'text-dark', 'border-purple/20');
+            });
+            
+            this.classList.add('bg-purple', 'text-white', 'border-purple');
+            this.classList.remove('bg-white', 'text-dark', 'border-purple/20');
+            
+            const category = this.getAttribute('data-category');
+            
+            serviceCards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = '';
+                    card.classList.add('animate-fadeIn');
+                    setTimeout(() => {
+                        card.classList.remove('animate-fadeIn');
+                    }, 500);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
     });
 
     // Initialisation de Lenis pour le défilement fluide
@@ -238,30 +318,33 @@ function initScrollHandlers() {
 
     // Mettre en évidence la section active lors du défilement
     function highlightActiveSection() {
+        // Obtenez toutes les sections avec un ID
         const sections = document.querySelectorAll('section[id], div[id].tab-content div[id]');
         if (sections.length === 0) return;
-
+    
         let currentSection = '';
-        const scrollPosition = window.scrollY + 200; // Ajout d'un offset
-
+        const scrollPosition = window.scrollY + 200;
+    
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
             const sectionHeight = section.offsetHeight;
-
+    
             if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
                 currentSection = section.getAttribute('id');
             }
         });
-
+    
         if (currentSection) {
-            const filters = document.querySelectorAll('.service-filter, a[href^="#"]');
-            filters.forEach(filter => {
-                if (filter.getAttribute('href') === `#${currentSection}`) {
-                    filter.classList.remove('bg-gray-light', 'text-dark');
-                    filter.classList.add('bg-purple', 'text-white');
+            // Sélectionnez uniquement les liens qui devraient être affectés (excluez les liens du footer)
+            const navLinks = document.querySelectorAll('a[href^="#"]:not(footer a)');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.remove('bg-gray-light', 'text-dark');
+                    link.classList.add('bg-purple', 'text-white');
                 } else {
-                    filter.classList.remove('bg-purple', 'text-white');
-                    filter.classList.add('bg-gray-light', 'text-dark');
+                    link.classList.remove('bg-purple', 'text-white');
+                    link.classList.add('bg-gray-light', 'text-dark');
                 }
             });
         }
