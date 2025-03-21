@@ -136,9 +136,11 @@
                         <div class="bg-white rounded-md shadow-md overflow-hidden">
                             <div class="flex flex-col md:flex-row">
                                 <div class="md:w-1/3 relative">
-                                    <img src="{{ asset('assets/about/directeur.png') }}" alt="Dr. HABIB" class="w-full h-full object-cover">
+                                    <img  src="{{ $settings['director']['photo'] ?? asset('assets/about/directeur.png') }}"
+                                    alt="{{ $settings['director']['name'] ?? 'Directeur' }} - {{ $settings['site_name'] }}"
+                                    class="w-full h-full object-cover">
                                     <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-purple/80 to-transparent p-3 text-white">
-                                        <h4 class="text-lg font-bold">Dr. HABIB</h4>
+                                        <h4 class="text-lg font-bold">{{ $settings['director']['name'] }}</h4>
                                         <p class="text-sm">Directeur général depuis 2020</p>
                                     </div>
                                 </div>

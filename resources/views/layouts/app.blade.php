@@ -31,6 +31,9 @@
                 <a href="{{ route('admin.setting') }}" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
                     <i class="fas fa-cog mr-3"></i> Paramètres
                 </a>
+                <a href="/" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
+                    <i class="fas fa-globe mr-3"></i> Site web
+                </a>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
                     <i class="fas fa-sign-out-alt mr-3"></i> Déconnexion
                 </a>

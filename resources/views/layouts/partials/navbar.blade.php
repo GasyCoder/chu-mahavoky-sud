@@ -1,4 +1,4 @@
-<!-- Navbar optimisée avec menu mobile et bouton d'urgence -->
+<!-- Navbar optimisée avec menu mobile, bouton d'urgence et indicateur de connexion -->
 <nav class="sticky top-0 z-50 bg-white shadow-[0_0_40px_0_#2B245D21]" id="navbar-container">
     <div class="container">
       <div class="flex items-center justify-between py-3">
@@ -16,6 +16,20 @@
 
         <!-- Menu hamburger et bouton d'urgence pour mobile -->
         <div class="flex items-center gap-3 lg:hidden">
+          <!-- Indicateur de connexion mobile -->
+          @auth
+            <div class="flex items-center gap-1">
+              <span class="inline-block h-2 w-2 rounded-full bg-green-500"></span>
+              <span class="text-xs">
+                @if(auth()->user()->isAdmin())
+                  Admin
+                @else
+                  Connecté
+                @endif
+              </span>
+            </div>
+          @endauth
+
           <!-- Bouton d'urgence visible sur mobile -->
           <a href="{{ route('contact') }}"
              class="flex h-8 items-center justify-center gap-1 rounded border border-purple bg-white px-3 py-1 text-xs text-purple hover:bg-purple hover:text-white transition-colors duration-300">
@@ -53,6 +67,22 @@
             </div>
 
             <ul class="flex flex-col">
+              <!-- Informations utilisateur si connecté -->
+              @auth
+              <li class="border-b bg-gray-50">
+                <div class="flex items-center gap-2 py-3 px-4">
+                  <span class="inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                  <span class="text-sm font-medium">
+                    @if(auth()->user()->isAdmin())
+                      Connecté en tant qu'Admin
+                    @else
+                      Connecté en tant qu'Utilisateur
+                    @endif
+                  </span>
+                </div>
+              </li>
+              @endauth
+
               <li class="border-b">
                 <a href="/" class="mobile-link block py-3 px-4 {{ request()->is('/') ? 'text-purple font-medium' : 'text-dark' }} transition-colors">
                   Accueil
@@ -73,6 +103,25 @@
                   Actualités
                 </a>
               </li>
+
+              <!-- Options d'authentification -->
+              @auth
+              @if(auth()->user()->isAdmin())
+              <li class="border-b">
+                <a href="{{ route('admin.dashboard') }}" class="mobile-link block py-3 px-4 {{ request()->routeIs('admin.dashboard') ? 'text-purple font-medium' : 'text-dark' }} transition-colors">
+                  Dashboard Admin
+                </a>
+              </li>
+              @endif
+              <li class="border-b">
+                <form method="POST" action="{{ route('logout') }}">
+                  @csrf
+                  <button type="submit" class="w-full text-left py-3 px-4 text-dark hover:text-purple transition-colors">
+                    Déconnexion
+                  </button>
+                </form>
+              </li>
+              @endauth
 
               <!-- Bouton d'urgence dans le menu mobile -->
               <li class="p-4">
@@ -123,20 +172,52 @@
           </li>
         </ul>
 
-        <!-- Bouton d'urgence desktop -->
-        <a href="{{ route('contact') }}"
-          class="group relative hidden lg:flex h-10 w-32 overflow-hidden rounded border-2 border-purple bg-transparent px-6 py-1.5 text-purple transition duration-300 hover:text-white items-center justify-center"
-        >
-          <span
-            class="absolute bottom-0 left-0 right-0 top-0 z-10 m-auto inline-flex items-center justify-center gap-1.5"
+        <div class="hidden lg:flex items-center gap-4">
+          <!-- Indicateur de connexion desktop -->
+          @auth
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full">
+              <span class="inline-block h-2 w-2 rounded-full bg-green-500"></span>
+              <span class="text-sm font-medium">
+                @if(auth()->user()->isAdmin())
+                  Admin
+                @else
+                  Connecté
+                @endif
+              </span>
+              <div class="relative group">
+                <button class="focus:outline-none">
+                  <i class="fa fa-chevron-down text-xs text-gray-500"></i>
+                </button>
+                <div class="absolute right-0 top-full mt-1 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                  @if(auth()->user()->isAdmin())
+                  <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Admin</a>
+                  @endif
+                  <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Déconnexion
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          @endauth
+
+          <!-- Bouton d'urgence desktop -->
+          <a href="{{ route('contact') }}"
+            class="group relative hidden lg:flex h-10 w-32 overflow-hidden rounded border-2 border-purple bg-transparent px-6 py-1.5 text-purple transition duration-300 hover:text-white items-center justify-center"
           >
-            <i class="fa fa-ambulance"></i>
-            Urgence
-          </span>
-          <div
-            class="absolute left-0 top-0 z-0 h-full w-0 rounded-r-full bg-purple transition-[width] duration-300 group-hover:w-44"
-          ></div>
-        </a>
+            <span
+              class="absolute bottom-0 left-0 right-0 top-0 z-10 m-auto inline-flex items-center justify-center gap-1.5"
+            >
+              <i class="fa fa-ambulance"></i>
+              Urgence
+            </span>
+            <div
+              class="absolute left-0 top-0 z-0 h-full w-0 rounded-r-full bg-purple transition-[width] duration-300 group-hover:w-44"
+            ></div>
+          </a>
+        </div>
       </div>
     </div>
   </nav>
