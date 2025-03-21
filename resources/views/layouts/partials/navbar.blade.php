@@ -1,5 +1,6 @@
 <!-- Navbar optimisée avec menu mobile, bouton d'urgence et indicateur de connexion -->
-<nav class="sticky top-0 z-50 bg-white shadow-[0_0_40px_0_#2B245D21]" id="navbar-container">
+<nav class="sticky top-0 z-50 bg-white shadow-[0_0_40px_0_#2B245D21]" id="navbar-container"
+x-data="{ mobileMenuOpen: false }">
     <div class="container">
       <div class="flex items-center justify-between py-3">
         <!-- Logo avec design plus compact -->
@@ -16,20 +17,6 @@
 
         <!-- Menu hamburger et bouton d'urgence pour mobile -->
         <div class="flex items-center gap-3 lg:hidden">
-          <!-- Indicateur de connexion mobile -->
-          @auth
-            <div class="flex items-center gap-1">
-              <span class="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-              <span class="text-xs">
-                @if(auth()->user()->isAdmin())
-                  Admin
-                @else
-                  Connecté
-                @endif
-              </span>
-            </div>
-          @endauth
-
           <!-- Bouton d'urgence visible sur mobile -->
           <a href="{{ route('contact') }}"
              class="flex h-8 items-center justify-center gap-1 rounded border border-purple bg-white px-3 py-1 text-xs text-purple hover:bg-purple hover:text-white transition-colors duration-300">
@@ -38,18 +25,25 @@
           </a>
 
           <!-- Menu hamburger -->
-          <button id="menu-toggle" class="cursor-pointer focus:outline-none">
+          <button @click="mobileMenuOpen = !mobileMenuOpen" class="cursor-pointer focus:outline-none p-2">
             <i class="fa fa-bars text-purple"></i>
           </button>
         </div>
 
         <!-- Menu mobile -->
-        <div id="mobile-menu" class="fixed inset-0 z-50 hidden">
+        <div x-show="mobileMenuOpen" class="fixed inset-0 z-50" style="display: none;">
           <!-- Overlay semi-transparent -->
-          <div class="absolute inset-0 bg-black/50" id="mobile-overlay"></div>
+          <div class="absolute inset-0 bg-black/50" @click="mobileMenuOpen = false"></div>
 
           <!-- Contenu du menu -->
-          <div class="absolute right-0 top-0 h-full w-full max-w-xs transform bg-white shadow-xl transition-transform duration-300 translate-x-full" id="mobile-content">
+          <div x-show="mobileMenuOpen"
+               x-transition:enter="transition ease-out duration-300"
+               x-transition:enter-start="translate-x-full"
+               x-transition:enter-end="translate-x-0"
+               x-transition:leave="transition ease-in duration-300"
+               x-transition:leave-start="translate-x-0"
+               x-transition:leave-end="translate-x-full"
+               class="absolute right-0 top-0 h-full w-full max-w-xs bg-white shadow-xl">
             <div class="flex items-center justify-between border-b p-4">
               <div class="flex items-center gap-2">
                 @if($settings['logo'])
@@ -61,28 +55,12 @@
                 @endif
                 <h6 class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple to-turquoise">{{ $settings['site_name'] }}</h6>
               </div>
-              <button id="close-menu" class="text-lg text-purple focus:outline-none">
+              <button @click="mobileMenuOpen = false" class="text-lg text-purple focus:outline-none p-2">
                 <i class="fa fa-times"></i>
               </button>
             </div>
 
             <ul class="flex flex-col">
-              <!-- Informations utilisateur si connecté -->
-              @auth
-              <li class="border-b bg-gray-50">
-                <div class="flex items-center gap-2 py-3 px-4">
-                  <span class="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                  <span class="text-sm font-medium">
-                    @if(auth()->user()->isAdmin())
-                      Connecté en tant qu'Admin
-                    @else
-                      Connecté en tant qu'Utilisateur
-                    @endif
-                  </span>
-                </div>
-              </li>
-              @endauth
-
               <li class="border-b">
                 <a href="/" class="mobile-link block py-3 px-4 {{ request()->is('/') ? 'text-purple font-medium' : 'text-dark' }} transition-colors">
                   Accueil
@@ -104,23 +82,15 @@
                 </a>
               </li>
 
-              <!-- Options d'authentification -->
+              <!-- Lien Admin Dashboard si admin -->
               @auth
-              @if(auth()->user()->isAdmin())
-              <li class="border-b">
-                <a href="{{ route('admin.dashboard') }}" class="mobile-link block py-3 px-4 {{ request()->routeIs('admin.dashboard') ? 'text-purple font-medium' : 'text-dark' }} transition-colors">
-                  Dashboard Admin
-                </a>
-              </li>
-              @endif
-              <li class="border-b">
-                <form method="POST" action="{{ route('logout') }}">
-                  @csrf
-                  <button type="submit" class="w-full text-left py-3 px-4 text-dark hover:text-purple transition-colors">
-                    Déconnexion
-                  </button>
-                </form>
-              </li>
+                @if(auth()->user()->isAdmin())
+                <li class="border-b">
+                  <a href="{{ route('admin.dashboard') }}" class="mobile-link block py-3 px-4 {{ request()->routeIs('admin.dashboard') ? 'text-purple font-medium' : 'text-dark' }} transition-colors">
+                    <i class="fa fa-lock mr-1"></i> Administration
+                  </a>
+                </li>
+                @endif
               @endauth
 
               <!-- Bouton d'urgence dans le menu mobile -->
@@ -170,42 +140,41 @@
               class="ml-auto h-[1.3px] {{ request()->routeIs('news') ? 'w-full ml-0' : 'w-0' }} bg-purple transition-[width] duration-150 group-hover:ml-0 group-hover:w-full"
             ></div>
           </li>
+
+          <!-- Élément Admin - visible uniquement pour les administrateurs -->
+          @auth
+            @if(auth()->user()->isAdmin())
+            <li class="group {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+              <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'text-purple' : 'text-dark hover:text-purple' }} transition-colors">
+                <i class="fa fa-lock mr-1"></i> Admin
+              </a>
+              <div
+                class="ml-auto h-[1.3px] {{ request()->routeIs('admin.dashboard') ? 'w-full ml-0' : 'w-0' }} bg-purple transition-[width] duration-150 group-hover:ml-0 group-hover:w-full"
+              ></div>
+            </li>
+            @endif
+          @endauth
         </ul>
 
         <div class="hidden lg:flex items-center gap-4">
-          <!-- Indicateur de connexion desktop -->
+          <!-- Indicateur de connexion desktop simplifié -->
           @auth
-            <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full">
-              <span class="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-              <span class="text-sm font-medium">
-                @if(auth()->user()->isAdmin())
-                  Admin
-                @else
-                  Connecté
-                @endif
+            @if(auth()->user()->isAdmin())
+              <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-3 py-1.5 bg-purple text-white rounded-full hover:bg-purple/90 transition-colors">
+                <i class="fa fa-user-shield"></i>
+                <span class="text-sm font-medium">Admin</span>
+              </a>
+            @else
+              <span class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full">
+                <span class="inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                <span class="text-sm font-medium">Connecté</span>
               </span>
-              <div class="relative group">
-                <button class="focus:outline-none">
-                  <i class="fa fa-chevron-down text-xs text-gray-500"></i>
-                </button>
-                <div class="absolute right-0 top-full mt-1 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                  @if(auth()->user()->isAdmin())
-                  <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Admin</a>
-                  @endif
-                  <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Déconnexion
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
+            @endif
           @endauth
 
           <!-- Bouton d'urgence desktop -->
           <a href="{{ route('contact') }}"
-            class="group relative hidden lg:flex h-10 w-32 overflow-hidden rounded border-2 border-purple bg-transparent px-6 py-1.5 text-purple transition duration-300 hover:text-white items-center justify-center"
+            class="group relative flex h-10 w-32 overflow-hidden rounded border-2 border-purple bg-transparent px-6 py-1.5 text-purple transition duration-300 hover:text-white items-center justify-center"
           >
             <span
               class="absolute bottom-0 left-0 right-0 top-0 z-10 m-auto inline-flex items-center justify-center gap-1.5"
