@@ -140,20 +140,6 @@ x-data="{ mobileMenuOpen: false }">
               class="ml-auto h-[1.3px] {{ request()->routeIs('news') ? 'w-full ml-0' : 'w-0' }} bg-purple transition-[width] duration-150 group-hover:ml-0 group-hover:w-full"
             ></div>
           </li>
-
-          <!-- Élément Admin - visible uniquement pour les administrateurs -->
-          @auth
-            @if(auth()->user()->isAdmin())
-            <li class="group {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-              <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'text-purple' : 'text-dark hover:text-purple' }} transition-colors">
-                <i class="fa fa-lock mr-1"></i> Admin
-              </a>
-              <div
-                class="ml-auto h-[1.3px] {{ request()->routeIs('admin.dashboard') ? 'w-full ml-0' : 'w-0' }} bg-purple transition-[width] duration-150 group-hover:ml-0 group-hover:w-full"
-              ></div>
-            </li>
-            @endif
-          @endauth
         </ul>
 
         <div class="hidden lg:flex items-center gap-4">
@@ -164,11 +150,6 @@ x-data="{ mobileMenuOpen: false }">
                 <i class="fa fa-user-shield"></i>
                 <span class="text-sm font-medium">Admin</span>
               </a>
-            @else
-              <span class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full">
-                <span class="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                <span class="text-sm font-medium">Connecté</span>
-              </span>
             @endif
           @endauth
 
