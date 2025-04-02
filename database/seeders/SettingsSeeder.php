@@ -42,7 +42,7 @@ class SettingsSeeder extends Seeder
         Setting::set('meta_keywords', 'hôpital, médecine, santé, CHU, Mahavoky, soins, urgences', 'seo');
 
         // Mot du directeur
-        Setting::set('director_name', 'Dr. Jean Dupont', 'director');
+        Setting::set('director_name', 'Dr. Nouraly Habib', 'director');
         Setting::set('director_title', 'Directeur Général', 'director');
         Setting::set('director_message', "En tant que directeur du CHU Mahavoky Atsimo, je suis fier de diriger une équipe dévouée de professionnels de santé qui s'engagent à fournir des soins exceptionnels adaptés aux besoins de chaque patient. Notre mission est d'offrir une médecine d'excellence accessible à tous, combinant expertise médicale, technologies de pointe et approche humaine.", 'director');
         Setting::set('director_photo', 'director.jpg', 'director');
