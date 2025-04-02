@@ -10,6 +10,8 @@ use App\Livewire\Admin\BlogAdmin;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Pages\NewsDetail;
 use App\Livewire\Admin\ServicesAdmin;
+use App\Livewire\Admin\MedicalServicesAdmin;
+use App\Livewire\Admin\AdministrationServicesAdmin;
 use App\Livewire\Pages\ServiceDetail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -29,7 +31,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/dashboard', Dashboard::class)->name('admin.dashboard');
 
+    // Services généraux (redirection vers la page d'aperçu des services)
     Route::get('/admin/services', ServicesAdmin::class)->name('admin.services');
+    
+    // Services médicaux
+    Route::get('/admin/services/medical', MedicalServicesAdmin::class)->name('admin.services.medical');
+    
+    // Services administratifs
+    Route::get('/admin/services/administration', AdministrationServicesAdmin::class)->name('admin.services.administration');
 
     Route::get('/admin/actualites', BlogAdmin::class)->name('admin.news');
 
