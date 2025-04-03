@@ -62,7 +62,7 @@ class ContactFormNotification extends Notification implements ShouldQueue
         return [
             'name' => $this->data['name'],
             'email' => $this->data['email'],
-            'phone' => $this->data['phone'],
+            'phone' => $this->data['phone'] ?? null,
             'subject' => $this->data['subject'],
             'message' => $this->data['message'],
         ];
