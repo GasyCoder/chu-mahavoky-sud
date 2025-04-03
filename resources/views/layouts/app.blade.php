@@ -19,7 +19,7 @@
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
                     <i class="mr-3 fas fa-tachometer-alt"></i> Tableau de bord
                 </a>
-                
+
                 <!-- Menu déroulant pour les services -->
                 <div x-data="{ open: false }" class="relative">
                     <!-- Bouton du menu déroulant -->
@@ -29,9 +29,9 @@
                         </div>
                         <i class="transition-transform fas fa-chevron-down" :class="{'transform rotate-180': open}"></i>
                     </button>
-                    
+
                     <!-- Contenu du menu déroulant -->
-                    <div x-show="open" 
+                    <div x-show="open"
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 transform scale-95"
                          x-transition:enter-end="opacity-100 transform scale-100"
@@ -39,37 +39,37 @@
                          x-transition:leave-start="opacity-100 transform scale-100"
                          x-transition:leave-end="opacity-0 transform scale-95"
                          class="bg-purple-dark">
-                        
+
                         <a href="{{ route('admin.services.medical') }}" class="flex items-center py-2 pl-10 pr-6 text-white hover:bg-purple-light">
                             <i class="mr-3 fas fa-stethoscope"></i> Service médicale
                         </a>
-                        
+
                         <a href="{{ route('admin.services.administration') }}" class="flex items-center py-2 pl-10 pr-6 text-white hover:bg-purple-light">
                             <i class="mr-3 fas fa-user-tie"></i> Administrations
                         </a>
                     </div>
                 </div>
-                
+
                 <a href="{{ route('admin.news') }}" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
                     <i class="mr-3 fas fa-newspaper"></i> Actualités
                 </a>
-                
+
                 <a href="{{ route('profile.edit') }}" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
                     <i class="mr-3 fas fa-user"></i> Profile
                 </a>
-                
+
                 <a href="{{ route('admin.setting') }}" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
                     <i class="mr-3 fas fa-cog"></i> Paramètres
                 </a>
-                
-                <a href="/" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
+
+                <a href="/" target="_blank" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
                     <i class="mr-3 fas fa-globe"></i> Site web
                 </a>
-                
+
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center px-6 py-3 text-white hover:bg-purple-light">
                     <i class="mr-3 fas fa-sign-out-alt"></i> Déconnexion
                 </a>
-                
+
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>

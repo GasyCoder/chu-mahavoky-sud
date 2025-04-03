@@ -38,6 +38,13 @@ class BlogAdmin extends Component
     public $confirmingItemDeletion = false;
     public $itemIdToDelete;
 
+    public function mount()
+    {
+        if (request()->method() === 'GET' && request()->is('livewire/update')) {
+            abort(403, 'Accès non autorisé');
+        }
+    }
+
     // Règles de validation
     protected function rules()
     {
