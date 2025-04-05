@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class ServicesAdmin extends Component
+class ServicesTechnique extends Component
 {
     use WithPagination, WithFileUploads;
 
@@ -44,7 +44,7 @@ class ServicesAdmin extends Component
     public $teamMemberPhotoTemp = [];
 
     public $categories = [];
-    public $administrativeCategoryIds = [];
+    public $technicalCategoryIds = [];
     public $showEditModal = false;
     public $editingServiceId = null;
     public $searchTerm = '';
@@ -53,19 +53,45 @@ class ServicesAdmin extends Component
     public $sortField = 'name';
     public $sortDirection = 'asc';
 
-    public $serviceType = 'administrative';
-    public $pageTitle = 'Gestion des Services Administratifs';
+    public $serviceType = 'technical';
+    public $pageTitle = 'Gestion des Services Techniques';
 
+    public function mount()
+    {
+        $this->loadCategories();
+        $this->categoryFilter = '';
+    }
+
+    protected function loadCategories()
+    {
+        // Récupère toutes les catégories
+        $this->categories = ServiceCategory::all();
+
+        // Filtrer les IDs des catégories techniques
+        $this->technicalCategoryIds = $this->categories
+            ->where('type', 'technical')
+            ->pluck('id')
+            ->toArray();
+
+        if (count($this->technicalCategoryIds) === 0) {
+            Log::warning('Aucune catégorie technique trouvée.');
+        }
+
+        // Définir une catégorie par défaut pour les nouveaux services
+        $defaultCategory = $this->categories->where('type', 'technical')->first();
+        if ($defaultCategory) {
+            $this->serviceData['category_id'] = $defaultCategory->id;
+        }
+    }
 
     public function render()
     {
         $services = $this->getFilteredServices();
-        $categories = ServiceCategory::where('type', $this->serviceType)->get();
 
-        return view('livewire.admin.services-admin', [
+        return view('livewire.admin.services-technique', [
             'services' => $services,
-            'categories' => $categories,
-            'serviceType' => $this->serviceType
+            'categories' => $this->categories,
+            'technicalCategoryIds' => $this->technicalCategoryIds
         ]);
     }
 
@@ -73,7 +99,7 @@ class ServicesAdmin extends Component
     {
         $query = Service::query()
             ->join('service_categories', 'services.category_id', '=', 'service_categories.id')
-            ->where('service_categories.type', 'administrative')
+            ->where('service_categories.type', 'technical')
             ->select('services.*');
 
         if (!empty($this->searchTerm)) {
@@ -128,9 +154,9 @@ class ServicesAdmin extends Component
     public function createNewService()
     {
         $this->resetForm();
-        $firstAdminCategory = ServiceCategory::where('type', 'administrative')->first();
-        if ($firstAdminCategory) {
-            $this->serviceData['category_id'] = $firstAdminCategory->id;
+        $firstTechnicalCategory = ServiceCategory::where('type', 'technical')->first();
+        if ($firstTechnicalCategory) {
+            $this->serviceData['category_id'] = $firstTechnicalCategory->id;
         }
         $this->showEditModal = true;
         $this->dispatch('modal-opened');
@@ -143,8 +169,8 @@ class ServicesAdmin extends Component
 
         $service = Service::findOrFail($id);
         $category = ServiceCategory::findOrFail($service->category_id);
-        if ($category->type !== 'administrative') {
-            session()->flash('error', 'Ce service n\'est pas un service administratif.');
+        if ($category->type !== 'technical') {
+            session()->flash('error', 'Ce service n\'est pas un service technique.');
             return;
         }
 
@@ -208,6 +234,12 @@ class ServicesAdmin extends Component
         $this->teamMemberPhotoTemp = [];
         $this->editingServiceId = null;
         $this->resetErrorBag();
+
+        // Définir la catégorie par défaut
+        $defaultCategory = $this->categories->where('type', 'technical')->first();
+        if ($defaultCategory) {
+            $this->serviceData['category_id'] = $defaultCategory->id;
+        }
     }
 
     protected function rules()
@@ -231,8 +263,8 @@ class ServicesAdmin extends Component
         $this->validate();
 
         $category = ServiceCategory::findOrFail($this->serviceData['category_id']);
-        if ($category->type !== 'administrative') {
-            session()->flash('error', 'Veuillez choisir une catégorie administrative.');
+        if ($category->type !== 'technical') {
+            session()->flash('error', 'Veuillez choisir une catégorie technique.');
             return;
         }
 
@@ -254,7 +286,7 @@ class ServicesAdmin extends Component
             $service->fill($this->serviceData);
             $service->save();
 
-            session()->flash('success', $this->editingServiceId ? 'Service administratif mis à jour.' : 'Service administratif créé.');
+            session()->flash('success', $this->editingServiceId ? 'Service technique mis à jour.' : 'Service technique créé.');
             $this->showEditModal = false;
         } catch (\Exception $e) {
             Log::error('Erreur lors de la sauvegarde: ' . $e->getMessage());
@@ -284,8 +316,8 @@ class ServicesAdmin extends Component
         $service = Service::findOrFail($id);
         $category = ServiceCategory::findOrFail($service->category_id);
 
-        if ($category->type !== 'administrative') {
-            session()->flash('error', 'Ce service n\'est pas un service administratif.');
+        if ($category->type !== 'technical') {
+            session()->flash('error', 'Ce service n\'est pas un service technique.');
             return;
         }
 
@@ -297,8 +329,8 @@ class ServicesAdmin extends Component
         $service = Service::findOrFail($id);
         $category = ServiceCategory::findOrFail($service->category_id);
 
-        if ($category->type !== 'administrative') {
-            session()->flash('error', 'Ce service n\'est pas un service administratif.');
+        if ($category->type !== 'technical') {
+            session()->flash('error', 'Ce service n\'est pas un service technique.');
             return;
         }
 
@@ -307,7 +339,7 @@ class ServicesAdmin extends Component
         }
 
         $service->delete();
-        session()->flash('success', 'Service administratif supprimé avec succès.');
+        session()->flash('success', 'Service technique supprimé avec succès.');
     }
 
     public function addTeamMember()

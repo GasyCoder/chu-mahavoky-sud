@@ -41,7 +41,7 @@
                          class="bg-purple-dark">
 
                         <a href="{{ route('admin.services.medical') }}" class="flex items-center py-2 pl-10 pr-6 text-white hover:bg-purple-light">
-                            <i class="mr-3 fas fa-stethoscope"></i> Service médicale
+                            <i class="mr-3 fas fa-stethoscope"></i> Service technique
                         </a>
 
                         <a href="{{ route('admin.services.administration') }}" class="flex items-center py-2 pl-10 pr-6 text-white hover:bg-purple-light">

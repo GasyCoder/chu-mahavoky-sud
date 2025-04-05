@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call([
             ServiceCategorySeeder::class,
-            ServiceSeeder::class,
+            // ServiceSeeder::class,
             AdminUserSeeder::class,
-            BlogSeeder::class,
-            SettingsSeeder::class,
+            // BlogSeeder::class,
+            //SettingsSeeder::class,
         ]);
     }
 }

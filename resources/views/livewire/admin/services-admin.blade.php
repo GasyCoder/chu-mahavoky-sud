@@ -1,236 +1,177 @@
 <div class="space-y-6">
     <!-- Messages de notification -->
-    @if (session('message'))
+    @if (session('success') || session('message'))
         <div class="p-4 text-white rounded-lg bg-turquoise">
-            {{ session('message') }}
+            {{ session('success') ?? session('message') }}
         </div>
     @endif
-    
+
     @if (session('error'))
         <div class="p-4 text-white rounded-lg bg-pink">
             {{ session('error') }}
         </div>
     @endif
 
-    <!-- Liste des services -->
-    <div class="overflow-hidden bg-white rounded-lg shadow">
-        <!-- En-tête avec titre et barre de recherche -->
-        <div class="flex flex-col gap-3 p-4 border-b bg-gray-light border-gray sm:flex-row sm:justify-between sm:items-center">
-            <h2 class="text-lg font-semibold text-dark">Liste des services</h2>
-            
-            <!-- Barre de recherche -->
-            <div class="w-full sm:w-64 lg:w-80">
-                <div class="relative text-gray-600">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <i class="text-gray-400 fas fa-search"></i>
-                    </span>
-                    <input 
-                        type="text" 
-                        wire:model.live="searchTerm" 
-                        class="w-full py-2 pl-10 pr-4 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-turquoise focus:border-turquoise"
-                        placeholder="Rechercher un service..."
-                    >
-                    @if(!empty($searchTerm))
-                        <button 
-                            wire:click="resetSearch" 
-                            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
-                        >
-                            <i class="fas fa-times"></i>
-                        </button>
+    <div class="p-6 bg-white rounded-lg shadow-md">
+        <!-- En-tête avec le titre et bouton d'ajout -->
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-turquoise">{{ $pageTitle ?? 'Gestion des Services Administratifs' }}</h2>
+            <button
+                wire:click="createNewService"
+                class="px-4 py-2 text-white transition-colors rounded-md hover:bg-turquoise-dark bg-turquoise">
+                <i class="mr-1 fas fa-plus"></i> Ajouter un service administratif
+            </button>
+        </div>
+
+        <div class="flex flex-col justify-between mb-4 space-y-4 md:flex-row md:space-y-0">
+            <!-- Recherche -->
+            <div class="flex items-center">
+                <div class="relative">
+                    <input
+                        type="text"
+                        wire:model.live.debounce.300ms="searchTerm"
+                        placeholder="Rechercher..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-l-md md:w-64 focus:border-turquoise focus:ring-turquoise">
+                    @if($searchTerm)
+                    <button wire:click="resetSearch" class="absolute top-0 right-0 h-full px-3 text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-times"></i>
+                    </button>
                     @endif
                 </div>
+                <button wire:click="$refresh" class="px-4 py-2 bg-gray-100 border border-l-0 border-gray-300 hover:bg-gray-200 rounded-r-md">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
             </div>
         </div>
-        
-        <div class="overflow-x-auto">
-            <table class="min-w-full">
-                <thead>
-                    <tr class="bg-gray-light">
-                        <!-- En-tête Nom - Triable -->
-                        <th class="px-4 py-2 text-sm font-medium text-left text-dark">
-                            <button 
-                                wire:click="sortBy('name')" 
-                                class="flex items-center text-left focus:outline-none"
-                            >
+
+        <!-- Tableau des services -->
+        <div class="mb-6 overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="text-white bg-turquoise">
+                    <tr>
+                        <th class="px-4 py-3 border-b cursor-pointer" wire:click="sortBy('name')">
+                            <div class="flex items-center">
                                 Nom
                                 @if($sortField === 'name')
-                                    <span class="ml-1 text-xs">
-                                        @if($sortDirection === 'asc')
-                                            <i class="fas fa-sort-up"></i>
-                                        @else
-                                            <i class="fas fa-sort-down"></i>
-                                        @endif
-                                    </span>
-                                @else
-                                    <span class="ml-1 text-xs text-gray-400">
-                                        <i class="fas fa-sort"></i>
-                                    </span>
+                                <i class="fas fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1"></i>
                                 @endif
-                            </button>
+                            </div>
                         </th>
-                        
-                        <!-- En-tête Catégorie - Triable -->
-                        <th class="px-4 py-2 text-sm font-medium text-left text-dark">
-                            <button 
-                                wire:click="sortBy('category_id')" 
-                                class="flex items-center text-left focus:outline-none"
-                            >
+                        <th class="px-4 py-3 border-b cursor-pointer" wire:click="sortBy('category_id')">
+                            <div class="flex items-center">
                                 Catégorie
                                 @if($sortField === 'category_id')
-                                    <span class="ml-1 text-xs">
-                                        @if($sortDirection === 'asc')
-                                            <i class="fas fa-sort-up"></i>
-                                        @else
-                                            <i class="fas fa-sort-down"></i>
-                                        @endif
-                                    </span>
-                                @else
-                                    <span class="ml-1 text-xs text-gray-400">
-                                        <i class="fas fa-sort"></i>
-                                    </span>
+                                <i class="fas fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1"></i>
                                 @endif
-                            </button>
+                            </div>
                         </th>
-                        
-                        <!-- En-tête Description - Non triable -->
-                        <th class="px-4 py-2 text-sm font-medium text-left text-dark">
-                            Description
-                        </th>
-                        
-                        <!-- En-tête Contact - Non triable -->
-                        <th class="px-4 py-2 text-sm font-medium text-left text-dark">
-                            Contact
-                        </th>
-                        
-                        <!-- En-tête Actif - Triable -->
-                        <th class="px-4 py-2 text-sm font-medium text-left text-dark">
-                            <button 
-                                wire:click="sortBy('active')" 
-                                class="flex items-center text-left focus:outline-none"
-                            >
+                        <th class="px-4 py-3 border-b">Major</th>
+                        <th class="px-4 py-3 border-b cursor-pointer" wire:click="sortBy('active')">
+                            <div class="flex items-center">
                                 Statut
                                 @if($sortField === 'active')
-                                    <span class="ml-1 text-xs">
-                                        @if($sortDirection === 'asc')
-                                            <i class="fas fa-sort-up"></i>
-                                        @else
-                                            <i class="fas fa-sort-down"></i>
-                                        @endif
-                                    </span>
-                                @else
-                                    <span class="ml-1 text-xs text-gray-400">
-                                        <i class="fas fa-sort"></i>
-                                    </span>
+                                <i class="fas fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1"></i>
                                 @endif
-                            </button>
+                            </div>
                         </th>
-                        
-                        <!-- En-tête Actions - Non triable -->
-                        <th class="px-4 py-2 text-sm font-medium text-left text-dark">
-                            Actions
-                        </th>
+                        <th class="px-4 py-3 text-center border-b">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($services as $service)
-                        <tr class="border-t border-gray hover:bg-gray-50">
-                            <td class="px-4 py-2 text-sm text-dark">
-                                <div class="flex items-center">
-                                    @if($service->image)
-                                        <div class="flex-shrink-0 w-8 h-8 mr-3">
-                                            <img class="object-cover w-8 h-8 rounded-full" src="{{ asset($service->image) }}" alt="{{ $service->name }}">
-                                        </div>
-                                    @elseif($service->icon)
-                                        <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-3 bg-gray-100 rounded-full">
-                                            <i class="{{ $service->icon }} text-turquoise"></i>
-                                        </div>
-                                    @endif
-                                    <span class="font-medium">{{ $service->name }}</span>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 border-b">
+                            <div class="flex items-center">
+                                <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-md bg-turquoise-light">
+                                    <i class="{{ $service->icon ?: 'fas fa-file-alt' }} text-lg"></i>
                                 </div>
-                            </td>
-                            <td class="px-4 py-2 text-sm text-dark">
-                                <span class="px-2 py-1 text-xs text-purple-800 bg-purple-100 rounded-full">
-                                    {{ $service->category->name }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-2 text-sm text-dark">{{ Str::limit($service->short_description, 50) }}</td>
-                            <td class="px-4 py-2 text-sm text-dark">
-                                @if($service->phone)
-                                    <div class="flex items-center text-xs">
-                                        <i class="mr-1 text-gray-400 fas fa-phone-alt"></i>
-                                        {{ $service->phone }}
-                                    </div>
+                                <div class="ml-3">
+                                    <p class="font-medium">{{ $service->name }}</p>
+                                    <p class="text-xs text-gray-500">{{ $service->phone }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 border-b">
+                            <span class="px-2 py-1 text-xs text-white rounded-full bg-turquoise-light">
+                                {{ $service->category->name ?? 'Non catégorisé' }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 border-b">
+                            <div class="flex flex-col">
+                                @php
+                                    $team = is_array($service->team_members) ? $service->team_members : json_decode($service->team_members, true);
+                                    $leader = $team['leader'] ?? null;
+                                    $members = $team['members'] ?? [];
+                                @endphp
+
+                                @if(isset($leader['name']) && $leader['name'])
+                                <p class="text-sm font-medium">Chef: {{ $leader['name'] }}</p>
+                                @else
+                                <p class="text-sm italic text-gray-500">Aucun chef d'équipe</p>
                                 @endif
-                                @if($service->email)
-                                    <div class="flex items-center mt-1 text-xs">
-                                        <i class="mr-1 text-gray-400 fas fa-envelope"></i>
-                                        {{ $service->email }}
-                                    </div>
+
+                                @if(is_array($members) && count($members) > 0)
+                                <p class="text-xs text-gray-500">{{ count($members) }} membre(s)</p>
                                 @endif
-                            </td>
-                            <td class="px-4 py-2 text-sm text-dark">
-                                <span class="inline-flex items-center px-2 py-1 text-xs rounded-full {{ $service->active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                    <i class="fas {{ $service->active ? 'fa-check-circle' : 'fa-times-circle' }} mr-1"></i>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 border-b">
+                            <div>
+                                <span class="px-2 py-1 {{ $service->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }} rounded-full text-xs">
                                     {{ $service->active ? 'Actif' : 'Inactif' }}
                                 </span>
-                            </td>
-                            <td class="flex gap-2 px-4 py-2 text-sm">
-                                <button 
-                                    wire:click="openEditModal({{ $service->id }})" 
-                                    class="px-2.5 py-1 bg-purple text-white rounded-lg hover:bg-purple-dark transition"
-                                >
-                                    <i class="fas fa-edit"></i> 
+
+                                @if($service->featured)
+                                <span class="px-2 py-1 ml-1 text-xs text-yellow-800 bg-yellow-100 rounded-full">
+                                    Mis en avant
+                                </span>
+                                @endif
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-center border-b">
+                            <div class="flex justify-center space-x-2">
+                                <button
+                                    wire:click="editService({{ $service->id }})"
+                                    class="px-2.5 py-1 bg-turquoise text-white rounded-lg hover:bg-turquoise-dark transition"
+                                    title="Modifier">
+                                    <i class="fas fa-edit"></i>
                                 </button>
-                                <button 
-                                    wire:click="deleteService({{ $service->id }})" 
-                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce service ?')" 
+
+                                <button
+                                    wire:click="confirmDeleteService({{ $service->id }})"
+                                    wire:confirm="Êtes-vous sûr de vouloir supprimer ce service administratif ? Cette action est irréversible."
                                     class="px-2.5 py-1 bg-pink text-white rounded-lg hover:bg-pink-dark transition"
-                                >
+                                    title="Supprimer">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="6" class="px-4 py-6 text-sm text-center text-dark">
-                                <div class="flex flex-col items-center justify-center py-4">
-                                    @if(!empty($searchTerm) || !empty($categoryFilter) || $statusFilter !== null || $sortField !== 'name')
-                                        <div class="mb-3 text-4xl text-gray-400">
-                                            <i class="fas fa-search"></i>
-                                        </div>
-                                        <p class="mb-2 text-gray-500">Aucun service ne correspond à votre recherche</p>
-                                        <button 
-                                            wire:click="resetFilters" 
-                                            class="mt-2 text-sm px-3 py-1.5 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition"
-                                        >
-                                            <i class="mr-1 fas fa-undo-alt"></i> Réinitialiser les filtres
-                                        </button>
-                                    @else
-                                        <div class="mb-4 text-5xl text-gray-300">
-                                            <i class="fas fa-inbox"></i>
-                                        </div>
-                                        <p class="text-gray-500">Aucun service trouvé.</p>
-                                        <button 
-                                            wire:click="createNewService" 
-                                            class="px-4 py-2 mt-3 text-sm text-white transition rounded-lg bg-turquoise hover:bg-turquoise-dark"
-                                        >
-                                            <i class="mr-1 fas fa-plus-circle"></i> Ajouter un service
-                                        </button>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="5" class="py-6 text-center text-gray-500">
+                            <div class="flex flex-col items-center justify-center">
+                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="mt-2">Aucun service administratif trouvé</p>
+                                <button wire:click="resetFilters" class="mt-2 text-sm text-turquoise hover:text-turquoise-dark">
+                                    Réinitialiser les filtres
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
 
-        <!-- Pagination Links -->
-        <div class="p-4 border-t border-gray">
+        <!-- Pagination -->
+        <div class="mt-4">
             {{ $services->links() }}
         </div>
     </div>
 
-    <!-- Modal d'édition -->
+    <!-- Inclusion du modal d'édition -->
     @include('livewire.admin.modal-service')
 </div>

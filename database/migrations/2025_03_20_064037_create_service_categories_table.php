@@ -6,27 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('service_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('icon')->nullable();
-            $table->text('description')->nullable();
-            $table->boolean('is_medical')->default(true);
-            $table->integer('order')->default(0);
-            $table->boolean('active')->default(true);
+            $table->enum('type', ['technical', 'administrative'])->default('technical'); // Nouveau champ
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('service_categories');
