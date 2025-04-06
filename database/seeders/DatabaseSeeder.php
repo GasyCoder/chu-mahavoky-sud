@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
             ServiceCategorySeeder::class,
             // ServiceSeeder::class,
             AdminUserSeeder::class,
-            // BlogSeeder::class,
-            //SettingsSeeder::class,
+            BlogSeeder::class,
+            SettingsSeeder::class,
         ]);
     }
 }
