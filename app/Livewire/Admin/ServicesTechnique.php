@@ -430,6 +430,17 @@ class ServicesTechnique extends Component
         }
     }
 
+    public function removeUploadedGalleryImage($index)
+    {
+        if (isset($this->galleryImages[$index])) {
+            // Supprimer l'élément spécifique du tableau
+            unset($this->galleryImages[$index]);
+            
+            // Réindexer le tableau pour qu'il n'y ait pas de trous
+            $this->galleryImages = array_values($this->galleryImages);
+        }
+    }
+
     // Suppression de l'image principale
     public function removeMainImage()
     {

@@ -46,5 +46,11 @@ class SettingsSeeder extends Seeder
         Setting::set('director_title', 'Directeur Général', 'director');
         Setting::set('director_message', "En tant que directeur du CHU Mahavoky Atsimo, je suis fier de diriger une équipe dévouée de professionnels de santé qui s'engagent à fournir des soins exceptionnels adaptés aux besoins de chaque patient. Notre mission est d'offrir une médecine d'excellence accessible à tous, combinant expertise médicale, technologies de pointe et approche humaine.", 'director');
         Setting::set('director_photo', 'director.jpg', 'director');
+
+        // Paramètres d'en-tête (Header) - NOUVEAUX
+        Setting::set('hero_background', 'herobg.jpg', 'header');
+        Setting::set('ministry_url', 'https://www.msanp.gov.mg/', 'header');
+        Setting::set('ministry_logo', 'minsante.png', 'header');
+        Setting::set('presentation_video', '', 'header');
     }
 }

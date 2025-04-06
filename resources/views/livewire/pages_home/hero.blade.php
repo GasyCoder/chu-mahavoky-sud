@@ -1,25 +1,39 @@
-<!-- Header optimisé avec Tailwind CSS uniquement -->
+@php
+    // Récupérer les données pertinentes en une seule fois
+    $siteInfo = [
+        'name' => \App\Helpers\SettingHelper::get('site_name', 'MAHAVOKY ATSIMO'),
+        'description' => \App\Helpers\SettingHelper::get('site_description', 'Centre Hospitalier Universitaire'),
+        'slogan' => \App\Helpers\SettingHelper::get('site_slogan', 'Offrir des soins de qualité et une prise en charge optimale pour instaurer une confiance durable.'),
+        'background' => \App\Helpers\SettingHelper::getImage('hero_background', asset('assets/herobg.jpg')),
+        'ministry_url' => \App\Helpers\SettingHelper::get('ministry_url', 'https://www.msanp.gov.mg/'),
+        'ministry_logo' => \App\Helpers\SettingHelper::getImage('ministry_logo', asset('assets/minsante.png')),
+        'presentation_video' => \App\Helpers\SettingHelper::get('presentation_video'),
+    ];
+@endphp
+
+<!-- Header optimisé avec Tailwind CSS et valeurs dynamiques depuis Settings -->
 <header class="relative h-[80vh] sm:h-[80vh] md:h-[80vh] bg-cover bg-center bg-no-repeat overflow-hidden"
-        style="background-image: url({{ asset('assets/herobg.jpg') }})">    <!-- Overlay avec gradient amélioré -->
+        style="background-image: url({{ $siteInfo['background'] }})">
+    <!-- Overlay avec gradient amélioré -->
     <div class="absolute inset-0 bg-gradient-to-br from-purple/80 via-purple/70 to-turquoise/60"></div>
     <!-- Contenu centré avec meilleure hiérarchie visuelle -->
     <div class="relative z-10 flex items-center justify-center h-full text-white">
       <div class="container px-4 py-12 md:py-16">
         <div class="max-w-3xl">
           <!-- Badge avec effet amélioré -->
-          <div class="inline-block px-2 py-2 mb-4 transition-all duration-300 border rounded-lg shadow-lg bg-white/15 backdrop-blur border-white/20" data-aos="fade-right" data-aos-duration="700">
-            <h4 class="text-xl font-medium tracking-wide text-white sm:text-2xl md:text-2xl">Centre Hospitalier Universitaire</h4>
+          <div class="inline-block px-2 py-2 mb-4 transition-all duration-300 border rounded-lg shadow-lg bg-white/8 border-white/0" data-aos="fade-right" data-aos-duration="700">
+            <h4 class="text-xl font-medium tracking-wide text-white sm:text-2xl md:text-2xl">{{ $siteInfo['description'] }}</h4>
           </div>
 
           <!-- Titre principal plus imposant -->
           <h1 class="mb-4 text-2xl font-bold leading-tight tracking-wide text-white sm:text-3xl md:text-3xl lg:text-3xl" data-aos="fade-right" data-aos-duration="900">
-            MAHAVOKY ATSIMO
+            {{ $siteInfo['name'] }}
           </h1>
 
           <!-- Description avec meilleur contraste -->
-          <div class="max-w-2xl p-4 mb-6 transition-all duration-300 rounded-lg shadow-md bg-black/30 backdrop-blur-sm" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="100">
+          <div class="max-w-2xl p-4 mb-6 transition-all duration-300 rounded-lg shadow-md " data-aos="fade-right" data-aos-duration="1000" data-aos-delay="100">
             <p class="text-base leading-relaxed text-white md:text-lg">
-              Offrir des soins de qualité et une prise en charge optimale pour instaurer une confiance durable entre patients et soignants.
+              {{ $siteInfo['slogan'] }}
             </p>
           </div>
 
@@ -37,7 +51,8 @@
                         </svg>
                     </a>
 
-                    <!-- Bouton vidéo avec animation ping améliorée -->
+                    <!-- Bouton vidéo avec animation ping améliorée (affiché seulement si une vidéo est configurée) -->
+                    @if($siteInfo['presentation_video'])
                     <label for="video-check" class="inline-flex items-center cursor-pointer group">
                         <div class="relative flex items-center justify-center mr-3">
                             <div class="absolute w-10 h-10 rounded-full opacity-75 bg-white/30 animate-ping"></div>
@@ -49,22 +64,24 @@
                         </div>
                         <span class="text-sm font-medium transition-colors duration-300 group-hover:text-white/80">Voir la présentation</span>
                     </label>
+                    @endif
                 </div>
 
                 <!-- Logo ministère repositionné pour ne pas dépasser la ligne rouge -->
-                <a href="https://www.msanp.gov.mg/" target="_blank"
+                <a href="{{ $siteInfo['ministry_url'] }}" target="_blank"
                     class="absolute right-10 sm:right-23 md:right-32 flex items-center justify-center p-1.5 transition-all duration-300 transform rounded-lg shadow-md bg-white/90 hover:bg-white hover:shadow-lg hover:-translate-y-1">
-                    <img src="{{ asset('assets/minsante.png') }}" alt="Ministère de la Santé" class="h-16 md:h-18">
+                    <img src="{{ $siteInfo['ministry_logo'] }}" alt="Ministère de la Santé" class="h-16 md:h-18">
                 </a>
             </div>
-
         </div>
       </div>
     </div>
 </header>
 
+
 @include('livewire.pages_home.counter')
 
+@if($siteInfo['presentation_video'])
 <!-- Modal vidéo optimisé avec transitions améliorées -->
 <input class="hidden peer" type="checkbox" id="video-check" />
 <label
@@ -87,3 +104,4 @@
     </iframe>
   </div>
 </label>
+@endif

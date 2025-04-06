@@ -172,6 +172,8 @@
         </div>
     </div>
 
-    <!-- Inclusion du modal d'édition -->
-    @include('livewire.admin.modal-service')
+    <div wire:ignore.self>
+        <!-- Inclusion du modal d'édition -->
+        @include('livewire.admin.modal-service')    
+    </div>
 </div>

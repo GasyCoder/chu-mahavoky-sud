@@ -147,16 +147,18 @@
                     @if(!empty($galleryImages))
                         <div class="grid grid-cols-2 gap-4 mt-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                             @foreach($galleryImages as $index => $tempImage)
-                                <div class="relative group">
-                                    <img src="{{ $tempImage->temporaryUrl() }}" alt="Nouvelle image {{ $index + 1 }}" class="object-cover w-full h-32 rounded">
-                                    <div class="absolute inset-0 flex items-center justify-center hidden transition-opacity bg-black bg-opacity-50 group-hover:flex">
-                                        <button type="button" wire:click="$set('galleryImages.{{ $index }}', null)" class="p-1 text-white bg-red-600 rounded-full hover:bg-red-700">
-                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                            </svg>
-                                        </button>
+                                @if($tempImage)
+                                    <div class="relative group">
+                                        <img src="{{ $tempImage->temporaryUrl() }}" alt="Nouvelle image {{ $index + 1 }}" class="object-cover w-full h-32 rounded">
+                                        <div class="absolute inset-0 flex items-center justify-center hidden transition-opacity bg-black bg-opacity-50 group-hover:flex">
+                                            <button type="button" wire:click="removeUploadedGalleryImage({{ $index }})" class="p-1 text-white bg-red-600 rounded-full hover:bg-red-700">
+                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             @endforeach
                         </div>
                     @endif
@@ -251,9 +253,9 @@
                                 <div class="w-16 h-16 mr-3 overflow-hidden bg-gray-100 rounded-full">
                                     <img src="{{ $serviceData['team_members']['leader']['photo'] }}" alt="Photo du responsable" class="object-cover w-full h-full">
                                 </div>
-                            @elseif(isset($teamLeaderPhotoTemp) && !empty($teamLeaderPhotoTemp))
+                            @elseif(isset($teamLeaderPhoto) && !empty($teamLeaderPhoto))
                                 <div class="w-16 h-16 mr-3 overflow-hidden bg-gray-100 rounded-full">
-                                    <img src="{{ $teamLeaderPhotoTemp->temporaryUrl() }}" alt="Aperçu de la photo" class="object-cover w-full h-full">
+                                    <img src="{{ $teamLeaderPhoto->temporaryUrl() }}" alt="Aperçu de la photo" class="object-cover w-full h-full">
                                 </div>
                             @endif
 
@@ -265,12 +267,12 @@
                                     <input
                                         type="file"
                                         id="team_leader_photo_upload"
-                                        wire:model="teamLeaderPhotoTemp"
+                                        wire:model="teamLeaderPhoto"
                                         class="hidden"
                                         accept="image/*"
                                     >
 
-                                    @if((isset($serviceData['team_members']['leader']['photo']) && !empty($serviceData['team_members']['leader']['photo'])) || (isset($teamLeaderPhotoTemp) && !empty($teamLeaderPhotoTemp)))
+                                    @if((isset($serviceData['team_members']['leader']['photo']) && !empty($serviceData['team_members']['leader']['photo'])) || (isset($teamLeaderPhoto) && !empty($teamLeaderPhoto)))
                                         <button
                                             type="button"
                                             wire:click="removeTeamLeaderPhoto"
@@ -281,7 +283,7 @@
                                     @endif
                                 </div>
 
-                                @error('teamLeaderPhotoTemp')
+                                @error('teamLeaderPhoto')
                                     <span class="block mt-1 text-sm text-left text-pink">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -354,12 +356,12 @@
                                                 <div class="w-12 h-12 overflow-hidden bg-gray-100 rounded-full">
                                                     <img src="{{ $serviceData['team_members']['members'][$index]['photo'] }}" alt="Photo" class="object-cover w-full h-full">
                                                 </div>
-                                            @elseif(isset($teamMemberPhotoTemp[$index]) && !empty($teamMemberPhotoTemp[$index]))
+                                            @elseif(isset($teamMemberPhotos[$index]) && $teamMemberPhotos[$index])
                                                 <div class="w-12 h-12 overflow-hidden bg-gray-100 rounded-full">
-                                                    <img src="{{ $teamMemberPhotoTemp[$index]->temporaryUrl() }}" alt="Aperçu de la photo" class="object-cover w-full h-full">
+                                                    <img src="{{ $teamMemberPhotos[$index]->temporaryUrl() }}" alt="Aperçu de la photo" class="object-cover w-full h-full">
                                                 </div>
                                             @endif
-
+                                    
                                             <div class="flex flex-col flex-1 space-y-2">
                                                 <div class="flex items-center space-x-2">
                                                     <label for="team_member_photo_upload_{{ $index }}" class="px-2 py-1 text-xs text-gray-700 transition bg-gray-200 rounded cursor-pointer hover:bg-gray-300">
@@ -368,12 +370,12 @@
                                                     <input
                                                         type="file"
                                                         id="team_member_photo_upload_{{ $index }}"
-                                                        wire:model="teamMemberPhotoTemp.{{ $index }}"
+                                                        wire:model="teamMemberPhotos.{{ $index }}"
                                                         class="hidden"
                                                         accept="image/*"
                                                     >
-
-                                                    @if((isset($serviceData['team_members']['members'][$index]['photo']) && !empty($serviceData['team_members']['members'][$index]['photo'])) || (isset($teamMemberPhotoTemp[$index]) && !empty($teamMemberPhotoTemp[$index])))
+                                    
+                                                    @if((isset($serviceData['team_members']['members'][$index]['photo']) && !empty($serviceData['team_members']['members'][$index]['photo'])) || (isset($teamMemberPhotos[$index]) && $teamMemberPhotos[$index]))
                                                         <button
                                                             type="button"
                                                             wire:click="removeTeamMemberPhoto({{ $index }})"
@@ -383,8 +385,8 @@
                                                         </button>
                                                     @endif
                                                 </div>
-
-                                                @error('teamMemberPhotoTemp.' . $index)
+                                    
+                                                @error('teamMemberPhotos.' . $index)
                                                     <span class="block mt-1 text-xs text-left text-pink">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -400,6 +402,7 @@
                     @endif
                 </div>
             </div>
+            
         </div>
     </div>
 

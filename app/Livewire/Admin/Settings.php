@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Settings extends Component
 {
@@ -14,6 +15,7 @@ class Settings extends Component
     // Paramètres généraux
     public $site_name;
     public $site_description;
+    public $site_slogan;
     public $logo;
     public $temp_logo;
     public $favicon;
@@ -48,6 +50,14 @@ class Settings extends Component
     public $director_photo;
     public $temp_director_photo;
 
+    // Paramètres d'en-tête (Header)
+    public $hero_background;
+    public $temp_hero_background;
+    public $ministry_url;
+    public $ministry_logo;
+    public $temp_ministry_logo;
+    public $presentation_video;
+
     // UI
     public $activeTab = 'general';
 
@@ -62,6 +72,7 @@ class Settings extends Component
         // Paramètres généraux
         $this->site_name = Setting::get('site_name', 'CHU Mahavoky');
         $this->site_description = Setting::get('site_description', 'Centre hospitalier universitaire');
+        $this->site_slogan = Setting::get('site_slogan', 'Offrir des soins de qualité et une prise en charge optimale pour instaurer une confiance durable.');
         $this->logo = Setting::get('logo');
         $this->favicon = Setting::get('favicon');
 
@@ -92,6 +103,12 @@ class Settings extends Component
         $this->director_title = Setting::get('director_title');
         $this->director_message = Setting::get('director_message');
         $this->director_photo = Setting::get('director_photo');
+
+        // Paramètres d'en-tête (Header)
+        $this->hero_background = Setting::get('hero_background');
+        $this->ministry_url = Setting::get('ministry_url', 'https://www.msanp.gov.mg/');
+        $this->ministry_logo = Setting::get('ministry_logo');
+        $this->presentation_video = Setting::get('presentation_video');
     }
 
     public function setActiveTab($tab)
@@ -104,6 +121,7 @@ class Settings extends Component
         $this->validate([
             'site_name' => 'required|string|max:255',
             'site_description' => 'nullable|string|max:500',
+            'site_slogan' => 'nullable|string|max:500',
             'temp_logo' => 'nullable|image|max:1024',
             'temp_favicon' => 'nullable|image|max:1024',
         ]);
@@ -111,6 +129,7 @@ class Settings extends Component
         // Enregistrer les paramètres textuels
         Setting::set('site_name', $this->site_name, 'general');
         Setting::set('site_description', $this->site_description, 'general');
+        Setting::set('site_slogan', $this->site_slogan, 'general');
 
         // Gérer le téléchargement du logo
         if ($this->temp_logo) {
@@ -235,6 +254,50 @@ class Settings extends Component
         }
 
         session()->flash('message', 'Mot du directeur mis à jour avec succès.');
+    }
+
+    // Nouvelle méthode pour sauvegarder les paramètres d'en-tête
+    public function saveHeaderSettings()
+    {
+        $this->validate([
+            'temp_hero_background' => 'nullable|image|max:2048|mimes:jpeg,png,jpg,gif',
+            'ministry_url' => 'nullable|url|max:255',
+            'temp_ministry_logo' => 'nullable|image|max:1024|mimes:jpeg,png,jpg,gif',
+            'presentation_video' => 'nullable|url|max:255',
+        ]);
+
+        Setting::set('ministry_url', $this->ministry_url, 'header');
+        Setting::set('presentation_video', $this->presentation_video, 'header');
+
+        // Gérer le téléchargement de l'image d'arrière-plan
+        if ($this->temp_hero_background) {
+            // Supprimer l'ancienne image si nécessaire
+            if ($this->hero_background && Storage::disk('public')->exists($this->hero_background)) {
+                Storage::disk('public')->delete($this->hero_background);
+            }
+
+            // Enregistrer la nouvelle image
+            $bgPath = $this->temp_hero_background->store('settings/header', 'public');
+            Setting::set('hero_background', $bgPath, 'header');
+            $this->hero_background = $bgPath;
+            $this->temp_hero_background = null;
+        }
+
+        // Gérer le téléchargement du logo du ministère
+        if ($this->temp_ministry_logo) {
+            // Supprimer l'ancien logo si nécessaire
+            if ($this->ministry_logo && Storage::disk('public')->exists($this->ministry_logo)) {
+                Storage::disk('public')->delete($this->ministry_logo);
+            }
+
+            // Enregistrer le nouveau logo
+            $logoPath = $this->temp_ministry_logo->store('settings/header', 'public');
+            Setting::set('ministry_logo', $logoPath, 'header');
+            $this->ministry_logo = $logoPath;
+            $this->temp_ministry_logo = null;
+        }
+
+        session()->flash('message', 'Paramètres d\'en-tête mis à jour avec succès.');
     }
 
     // Nettoyer le cache des paramètres

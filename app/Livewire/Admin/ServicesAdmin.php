@@ -8,7 +8,6 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,18 +18,18 @@ class ServicesAdmin extends Component
     // Propriétés de base
     public $serviceType = 'administrative';
     public $pageTitle = 'Gestion des Services Administratifs';
-
+    
     // Propriétés pour la recherche et le filtrage
     public $searchTerm = '';
     public $categoryFilter = '';
     public $statusFilter = null;
     public $sortField = 'name';
     public $sortDirection = 'asc';
-
+    
     // Propriétés pour l'édition des services
     public $showEditModal = false;
     public $editingServiceId = null;
-
+    
     // Données du service
     public $serviceData = [
         'name' => '',
@@ -55,18 +54,49 @@ class ServicesAdmin extends Component
         'featured' => false,
         'active' => true
     ];
-
+    
     // Gestion des images
     public $mainImage; // Image principale
     public $galleryImages = []; // Images multiples pour l'upload
     public $existingImages = []; // Images existantes en base de données
-
+    
     // Gestion des photos d'équipe
     public $teamLeaderPhoto;
     public $teamMemberPhotos = [];
-
+    
     // Liste des catégories disponibles
     public $categories = [];
+    public $adminCategoryIds = [];
+
+    // Initialisation du composant
+    public function mount()
+    {
+        $this->loadCategories();
+        $this->categoryFilter = '';
+    }
+
+    // Chargement des catégories
+    protected function loadCategories()
+    {
+        // Récupérer toutes les catégories
+        $this->categories = ServiceCategory::all();
+
+        // Filtrer les IDs des catégories techniques
+        $this->adminCategoryIds = $this->categories
+            ->where('type', 'administrative')
+            ->pluck('id')
+            ->toArray();
+
+        if (count($this->adminCategoryIds) === 0) {
+            Log::warning('Aucune catégorie administrative trouvée.');
+        }
+
+        // Définir une catégorie par défaut pour les nouveaux services
+        $defaultCategory = $this->categories->where('type', 'administrative')->first();
+        if ($defaultCategory) {
+            $this->serviceData['category_id'] = $defaultCategory->id;
+        }
+    }
 
     // Règles de validation
     protected function rules()
@@ -88,12 +118,6 @@ class ServicesAdmin extends Component
         ];
     }
 
-    // Initialisation du composant
-    public function mount()
-    {
-        $this->categories = ServiceCategory::where('type', $this->serviceType)->get();
-    }
-
     // Rendu du composant
     public function render()
     {
@@ -102,6 +126,7 @@ class ServicesAdmin extends Component
         return view('livewire.admin.services-admin', [
             'services' => $services,
             'categories' => $this->categories,
+            'adminCategoryIds' => $this->adminCategoryIds,
             'serviceType' => $this->serviceType
         ]);
     }
@@ -164,6 +189,12 @@ class ServicesAdmin extends Component
         $this->statusFilter = null;
     }
 
+    // Réinitialisation de la recherche
+    public function resetSearch()
+    {
+        $this->searchTerm = '';
+    }
+
     // Création d'un nouveau service
     public function createNewService()
     {
@@ -181,13 +212,13 @@ class ServicesAdmin extends Component
     {
         $this->resetForm();
         $this->editingServiceId = $id;
-
+        
         $service = Service::findOrFail($id);
         $category = ServiceCategory::findOrFail($service->category_id);
-
+        
         // Vérifier le type de service
         if ($category->type !== $this->serviceType) {
-            session()->flash('error', 'Ce service ne correspond pas au type sélectionné.');
+            session()->flash('error', 'Ce service n\'est pas un service administrative.');
             return;
         }
 
@@ -213,7 +244,6 @@ class ServicesAdmin extends Component
 
         // Charger l'image principale
         if ($service->image) {
-            // On ne fait que stocker le chemin, pas besoin de l'objet ici
             $this->serviceData['image'] = $service->image;
         }
 
@@ -222,12 +252,15 @@ class ServicesAdmin extends Component
 
         $this->showEditModal = true;
         $this->dispatch('modal-opened');
+
+        $this->dispatch('descriptionUpdated', $this->serviceData['full_description']);
     }
 
     // Fermeture du modal
     public function closeModal()
     {
         $this->showEditModal = false;
+        $this->dispatch('modal-closed');
     }
 
     // Réinitialisation du formulaire
@@ -264,6 +297,12 @@ class ServicesAdmin extends Component
         $this->teamMemberPhotos = [];
         $this->editingServiceId = null;
         $this->resetErrorBag();
+
+        // Définir la catégorie par défaut
+        $defaultCategory = $this->categories->where('type', 'administrative')->first();
+        if ($defaultCategory) {
+            $this->serviceData['category_id'] = $defaultCategory->id;
+        }
     }
 
     // Sauvegarde du service
@@ -271,59 +310,56 @@ class ServicesAdmin extends Component
     {
         $this->validate();
 
-        try {
-            DB::beginTransaction();
+        // Vérifier que la catégorie est bien une catégorie administrative
+        $category = ServiceCategory::findOrFail($this->serviceData['category_id']);
+        if ($category->type !== $this->serviceType) {
+            session()->flash('error', 'Veuillez choisir une catégorie administrative.');
+            return;
+        }
 
+        try {
             // Récupérer ou créer le service
-            if ($this->editingServiceId) {
-                $service = Service::findOrFail($this->editingServiceId);
-            } else {
-                $service = new Service();
+            $service = $this->editingServiceId ? Service::findOrFail($this->editingServiceId) : new Service();
+            
+            // Générer le slug si nouveau service
+            if (empty($service->slug)) {
                 $service->slug = Str::slug($this->serviceData['name']);
             }
 
-            // Traiter les données de base
-            $service->fill($this->serviceData);
-
             // Traiter l'image principale
             if ($this->mainImage) {
-                // Supprimer l'ancienne image si elle existe
-                if ($service->image && Storage::disk('public')->exists($service->image)) {
-                    Storage::disk('public')->delete($service->image);
+                if ($service->image && Storage::exists($service->image)) {
+                    Storage::delete($service->image);
                 }
-
-                // Stocker la nouvelle image
-                $service->image = $this->mainImage->store('services', 'public');
+                $imagePath = $this->mainImage->store('services', 'public');
+                $this->serviceData['image'] = $imagePath;
             }
 
             // Traiter les photos d'équipe
-            $this->processTeamPhotos($service);
-
+            $this->processTeamPhotos();
+            
             // Traiter les images de la galerie
             $this->processGalleryImages($service);
 
-            // Sauvegarder le service
+            // Remplir et sauvegarder le service
+            $service->fill($this->serviceData);
             $service->save();
 
-            DB::commit();
-
             // Notification de succès
-            session()->flash('success', 'Service sauvegardé avec succès!');
+            session()->flash('success', $this->editingServiceId ? 'Service administrative mis à jour.' : 'Service administrative créé.');
             $this->showEditModal = false;
-            $this->resetForm();
-
+            
         } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Erreur lors de la sauvegarde du service: ' . $e->getMessage(), [
+            Log::error('Erreur lors de la sauvegarde: ' . $e->getMessage(), [
                 'exception' => $e,
                 'service_data' => $this->serviceData
             ]);
-            session()->flash('error', 'Erreur lors de la sauvegarde: ' . $e->getMessage());
+            session()->flash('error', 'Erreur lors de l\'enregistrement: ' . $e->getMessage());
         }
     }
 
     // Traitement des photos d'équipe
-    protected function processTeamPhotos(&$service)
+    protected function processTeamPhotos()
     {
         // Photo du chef d'équipe
         if ($this->teamLeaderPhoto) {
@@ -340,9 +376,6 @@ class ServicesAdmin extends Component
                 }
             }
         }
-
-        // Mettre à jour les données du service
-        $service->team_members = $this->serviceData['team_members'];
     }
 
     // Traitement des images de galerie
@@ -350,12 +383,12 @@ class ServicesAdmin extends Component
     {
         // Initialiser le tableau d'images
         $galleryImages = [];
-
+        
         // Conserver les images existantes
         if (!empty($this->existingImages)) {
             $galleryImages = $this->existingImages;
         }
-
+        
         // Ajouter les nouvelles images
         if (!empty($this->galleryImages)) {
             foreach ($this->galleryImages as $image) {
@@ -363,7 +396,7 @@ class ServicesAdmin extends Component
                 $galleryImages[] = $path;
             }
         }
-
+        
         // Mettre à jour les images du service si nous avons des images
         if (!empty($galleryImages)) {
             $service->images = $galleryImages;
@@ -375,16 +408,16 @@ class ServicesAdmin extends Component
     {
         if (isset($this->existingImages[$index])) {
             $imagePath = $this->existingImages[$index];
-
+            
             // Supprimer l'image du stockage
             if (Storage::disk('public')->exists($imagePath)) {
                 Storage::disk('public')->delete($imagePath);
             }
-
+            
             // Supprimer l'image du tableau
             unset($this->existingImages[$index]);
             $this->existingImages = array_values($this->existingImages);
-
+            
             // Mettre à jour le service si on est en mode édition
             if ($this->editingServiceId) {
                 $service = Service::find($this->editingServiceId);
@@ -397,6 +430,17 @@ class ServicesAdmin extends Component
         }
     }
 
+    public function removeUploadedGalleryImage($index)
+    {
+        if (isset($this->galleryImages[$index])) {
+            // Supprimer l'élément spécifique du tableau
+            unset($this->galleryImages[$index]);
+            
+            // Réindexer le tableau pour qu'il n'y ait pas de trous
+            $this->galleryImages = array_values($this->galleryImages);
+        }
+    }
+
     // Suppression de l'image principale
     public function removeMainImage()
     {
@@ -405,10 +449,10 @@ class ServicesAdmin extends Component
             if (Storage::disk('public')->exists($this->serviceData['image'])) {
                 Storage::disk('public')->delete($this->serviceData['image']);
             }
-
+            
             // Supprimer la référence à l'image
             $this->serviceData['image'] = null;
-
+            
             // Mettre à jour le service si on est en mode édition
             if ($this->editingServiceId) {
                 $service = Service::find($this->editingServiceId);
@@ -419,7 +463,7 @@ class ServicesAdmin extends Component
                 }
             }
         }
-
+        
         // Réinitialiser l'image principale temporaire
         $this->mainImage = null;
     }
@@ -429,19 +473,19 @@ class ServicesAdmin extends Component
     {
         if (isset($this->existingImages[$index])) {
             $imagePath = $this->existingImages[$index];
-
+            
             // Si une image principale existe déjà, l'ajouter à la galerie
             if (isset($this->serviceData['image']) && !empty($this->serviceData['image'])) {
                 $this->existingImages[] = $this->serviceData['image'];
             }
-
+            
             // Mettre à jour l'image principale
             $this->serviceData['image'] = $imagePath;
-
+            
             // Supprimer l'image de la galerie
             unset($this->existingImages[$index]);
             $this->existingImages = array_values($this->existingImages);
-
+            
             // Mettre à jour le service si on est en mode édition
             if ($this->editingServiceId) {
                 $service = Service::find($this->editingServiceId);
@@ -455,62 +499,6 @@ class ServicesAdmin extends Component
         }
     }
 
-    // Ajout d'un membre à l'équipe
-    public function addTeamMember()
-    {
-        if (!isset($this->serviceData['team_members']['members'])) {
-            $this->serviceData['team_members']['members'] = [];
-        }
-
-        $this->serviceData['team_members']['members'][] = [
-            'name' => '',
-            'position' => '',
-            'photo' => '',
-            'email' => ''
-        ];
-    }
-
-    // Suppression d'un membre de l'équipe
-    public function removeTeamMember($index)
-    {
-        if (isset($this->serviceData['team_members']['members'][$index])) {
-            // Supprimer la photo du membre si elle existe
-            $photoPath = $this->serviceData['team_members']['members'][$index]['photo'] ?? null;
-            if ($photoPath && !Str::startsWith($photoPath, 'http')) {
-                $path = str_replace('/storage/', '', $photoPath);
-                if (Storage::disk('public')->exists($path)) {
-                    Storage::disk('public')->delete($path);
-                }
-            }
-
-            // Supprimer le membre
-            unset($this->serviceData['team_members']['members'][$index]);
-            $this->serviceData['team_members']['members'] = array_values($this->serviceData['team_members']['members']);
-        }
-
-        // Supprimer la photo temporaire si elle existe
-        if (isset($this->teamMemberPhotos[$index])) {
-            unset($this->teamMemberPhotos[$index]);
-        }
-    }
-
-    // Suppression de la photo du chef d'équipe
-    public function removeTeamLeaderPhoto()
-    {
-        // Supprimer la photo du stockage si elle existe
-        $photoPath = $this->serviceData['team_members']['leader']['photo'] ?? null;
-        if ($photoPath && !Str::startsWith($photoPath, 'http')) {
-            $path = str_replace('/storage/', '', $photoPath);
-            if (Storage::disk('public')->exists($path)) {
-                Storage::disk('public')->delete($path);
-            }
-        }
-
-        // Réinitialiser la photo
-        $this->serviceData['team_members']['leader']['photo'] = '';
-        $this->teamLeaderPhoto = null;
-    }
-
     // Confirmation de suppression d'un service
     public function confirmDeleteService($id)
     {
@@ -518,7 +506,7 @@ class ServicesAdmin extends Component
         $category = ServiceCategory::findOrFail($service->category_id);
 
         if ($category->type !== $this->serviceType) {
-            session()->flash('error', 'Ce service ne correspond pas au type sélectionné.');
+            session()->flash('error', 'Ce service n\'est pas un service administrative.');
             return;
         }
 
@@ -532,38 +520,80 @@ class ServicesAdmin extends Component
         $category = ServiceCategory::findOrFail($service->category_id);
 
         if ($category->type !== $this->serviceType) {
-            session()->flash('error', 'Ce service ne correspond pas au type sélectionné.');
+            session()->flash('error', 'Ce service n\'est pas un service administrative.');
             return;
         }
 
         try {
-            DB::beginTransaction();
-
-            // Suppression de l'image principale
-            if ($service->image && Storage::disk('public')->exists($service->image)) {
-                Storage::disk('public')->delete($service->image);
+            // Supprimer l'image principale
+            if ($service->image && Storage::exists($service->image)) {
+                Storage::delete($service->image);
             }
-
-            // Suppression des images de la galerie
+            
+            // Supprimer les images de la galerie
             if (is_array($service->images) && !empty($service->images)) {
                 foreach ($service->images as $imagePath) {
-                    if (Storage::disk('public')->exists($imagePath)) {
-                        Storage::disk('public')->delete($imagePath);
+                    if (Storage::exists($imagePath)) {
+                        Storage::delete($imagePath);
                     }
                 }
             }
-
-            // Suppression du service
+            
+            // Supprimer le service
             $service->delete();
-
-            DB::commit();
-
-            session()->flash('success', 'Service supprimé avec succès.');
-
+            
+            session()->flash('success', 'Service administrative supprimé avec succès.');
+            
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error('Erreur lors de la suppression du service: ' . $e->getMessage());
             session()->flash('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+        }
+    }
+
+    // Ajout d'un membre à l'équipe
+    public function addTeamMember()
+    {
+        if (!isset($this->serviceData['team_members']['members'])) {
+            $this->serviceData['team_members']['members'] = [];
+        }
+        
+        $this->serviceData['team_members']['members'][] = [
+            'name' => '',
+            'position' => '',
+            'photo' => '',
+            'email' => ''
+        ];
+    }
+
+    // Suppression d'un membre de l'équipe
+    public function removeTeamMember($index)
+    {
+        if (isset($this->serviceData['team_members']['members'][$index])) {
+            unset($this->serviceData['team_members']['members'][$index]);
+            $this->serviceData['team_members']['members'] = array_values($this->serviceData['team_members']['members']);
+        }
+
+        if (isset($this->teamMemberPhotos[$index])) {
+            unset($this->teamMemberPhotos[$index]);
+        }
+    }
+
+    // Suppression de la photo du chef d'équipe
+    public function removeTeamLeaderPhoto()
+    {
+        $this->serviceData['team_members']['leader']['photo'] = '';
+        $this->teamLeaderPhoto = null;
+    }
+
+    // Suppression de la photo d'un membre de l'équipe
+    public function removeTeamMemberPhoto($index)
+    {
+        if (isset($this->serviceData['team_members']['members'][$index])) {
+            $this->serviceData['team_members']['members'][$index]['photo'] = '';
+        }
+
+        if (isset($this->teamMemberPhotos[$index])) {
+            unset($this->teamMemberPhotos[$index]);
         }
     }
 }
