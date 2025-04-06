@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('icon')->nullable();
             $table->string('image')->nullable();
+            $table->json('images')->nullable();
             $table->text('short_description');
             $table->longText('full_description')->nullable();
             $table->string('phone')->nullable();

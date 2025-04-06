@@ -34,7 +34,7 @@
                 {{ $activeTab === 'technical'
                     ? 'text-purple border-b-2 border-purple'
                     : 'text-gray-dark hover:text-purple-dark' }}">
-                <i class="mr-2 fas fa-tools"></i>Services Techniques
+                 <i class="mr-3 fas fa-stethoscope"></i>Services Techniques
             </button>
             <button wire:click="switchTab('administrative')"
                 class="pb-2 font-medium text-lg transition-all duration-200 font-poppins

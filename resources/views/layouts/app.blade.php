@@ -7,6 +7,7 @@
     <title>Admin Dashboard - CHU Mahavoky</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset ('assets/super.png')}}" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 <body class="font-poppins bg-gray-light text-dark">
     <div class="flex h-screen">
@@ -94,5 +95,6 @@
         </div>
     </div>
     <script src="https://kit.fontawesome.com/b50fc748ca.js" crossorigin="anonymous"></script>
+    @stack('scripts')
 </body>
 </html>

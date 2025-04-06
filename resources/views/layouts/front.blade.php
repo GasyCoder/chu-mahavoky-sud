@@ -32,8 +32,8 @@
         {{ $slot }}
 
         <!-- Bouton retour en haut -->
-        <button id="backToTop" class="fixed bottom-8 right-8 z-50 hidden h-12 w-12 rounded-full bg-purple shadow-lg transition-all duration-300 hover:bg-turquoise">
-            <i class="fa fa-arrow-up text-white"></i>
+        <button id="backToTop" class="fixed z-50 hidden w-12 h-12 transition-all duration-300 rounded-full shadow-lg bottom-8 right-8 bg-purple hover:bg-turquoise">
+            <i class="text-white fa fa-arrow-up"></i>
         </button>
 
         @include('layouts.partials.footer')

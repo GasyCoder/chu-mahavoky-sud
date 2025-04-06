@@ -1,6 +1,17 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 
+import tinymce from 'tinymce/tinymce';
+import 'tinymce/icons/default';
+import 'tinymce/themes/silver';
+import 'tinymce/models/dom';
+import 'tinymce/skins/ui/oxide/skin.min.css';
+import 'tinymce/plugins/link';
+import 'tinymce/plugins/table';
+import 'tinymce/plugins/lists';
+import 'tinymce/plugins/code';
+
+
 // Configuration globale Alpine
 window.Alpine = Alpine;
 Alpine.start();

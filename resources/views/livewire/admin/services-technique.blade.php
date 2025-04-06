@@ -1,7 +1,7 @@
 <div class="space-y-6">
     <!-- Messages de notification -->
     @if (session('success') || session('message'))
-        <div class="p-4 text-white rounded-lg bg-purple">
+        <div class="p-4 text-white rounded-lg bg-turquoise">
             {{ session('success') ?? session('message') }}
         </div>
     @endif
@@ -84,7 +84,8 @@
                         <td class="px-4 py-3 border-b">
                             <div class="flex items-center">
                                 <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-md bg-purple-light">
-                                    <i class="{{ $service->icon ?: 'fas fa-tools' }} text-lg"></i>
+                                    <i class="{{ $service->icon ?: 'fas fa-stethoscope' }} text-lg"></i>
+
                                 </div>
                                 <div class="ml-3">
                                     <p class="font-medium">{{ $service->name }}</p>
