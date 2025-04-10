@@ -8,7 +8,7 @@
                     <img src="{{ Storage::url($service->image) }}" alt="{{ $service->name }}" class="object-cover w-full h-full opacity-30 mix-blend-overlay">
                 @endif
             </div>
-    
+
             <!-- Contenu de la bannière avec taille de texte ajustée -->
             <div class="container relative px-4 py-12 mx-auto md:py-16" data-aos="fade-up">
                 <div class="inline-flex items-center px-3 py-1 mb-3 text-xs rounded-full bg-white/20 backdrop-blur-sm text-white/90">
@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-    
+
         <!-- Contenu principal avec espacement et tailles optimisés -->
         <div class="container px-4 py-8 mx-auto md:py-10">
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         @endif
-    
+
                         <div class="p-5 md:p-6">
                             <!-- Description complète avec taille de texte ajustée -->
                             <div class="mb-6 prose text-gray-700 max-w-none">
@@ -60,7 +60,7 @@
                                     {!! $service->full_description !!}
                                 </div>
                             </div>
-    
+
                             <!-- Équipements si disponibles -->
                             @if(!empty($service->equipments) && is_array($service->equipments) && count($service->equipments) > 0)
                             <div class="mt-8">
@@ -80,7 +80,7 @@
                             @endif
                         </div>
                     </div>
-    
+
                     <!-- Section galerie améliorée -->
                     @if(!empty($service->images) && count($service->images) > 0)
                     <div class="p-5 overflow-hidden bg-white rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="50">
@@ -88,7 +88,7 @@
                             <i class="mr-2 fas fa-images text-purple"></i>
                             Galerie de photos
                         </h5>
-                        
+
                         <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                             @foreach($service->images as $index => $imagePath)
                             <div class="relative overflow-hidden rounded-lg cursor-pointer group gallery-item" onclick="openLightbox('{{ Storage::url($imagePath) }}', {{ $index }})">
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                     @endif
-    
+
                     <!-- Section améliorée de l'équipe -->
                     @php
                         // Vérifier si nous avons un leader d'équipe et des membres
@@ -111,7 +111,7 @@
                         $hasTeamMembers = isset($service->team_members['members']) && is_array($service->team_members['members']) && count($service->team_members['members']) > 0;
                         $teamName = $service->team_members['name'] ?? null;
                     @endphp
-    
+
                     @if($hasTeamLeader || $hasTeamMembers || !empty($formattedTeamMembers))
                     <div class="p-5 overflow-hidden bg-white rounded-lg shadow-md md:p-6" data-aos="fade-up" data-aos-delay="100">
                         <h5 class="flex items-center mb-4 font-semibold text-dark">
@@ -122,7 +122,7 @@
                                 Notre équipe spécialisée
                             @endif
                         </h5>
-    
+
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             <!-- Afficher le responsable d'équipe s'il existe -->
                             @if($hasTeamLeader)
@@ -152,7 +152,7 @@
                                     </div>
                                 </div>
                             @endif
-    
+
                             <!-- Afficher les membres d'équipe s'ils existent -->
                             @if($hasTeamMembers)
                                 @foreach($service->team_members['members'] as $index => $member)
@@ -181,17 +181,17 @@
                                     </div>
                                 @endforeach
                             @endif
-    
+
                             <!-- Utiliser les données formatées si nous n'avons pas la structure attendue -->
                             @if(!$hasTeamLeader && !$hasTeamMembers && !empty($formattedTeamMembers))
                                 @foreach($formattedTeamMembers as $index => $member)
                                     <div class="team-member-card {{ $member['isLead'] ? 'team-member-lead' : '' }}" data-member-index="{{ $index }}">
                                         @php
-                                            $colorIndex = $index % 3;
-                                            $avatarBgClass = $colorIndex === 0 ? 'bg-purple/10' : ($colorIndex === 1 ? 'bg-turquoise/10' : 'bg-amber-400/10');
-                                            $avatarIconClass = $colorIndex === 0 ? 'fa-user-md text-purple' : ($colorIndex === 1 ? 'fa-user-nurse text-turquoise' : 'fa-user text-amber-500');
+                                            $colorIndex = (int)$index % 3;  // Conversion explicite de $index en entier
+                                            $avatarBgClass = $colorIndex === 0 ? 'bg-turquoise/10' : ($colorIndex === 1 ? 'bg-amber-400/10' : 'bg-gray-200');
+                                            $avatarIconClass = $colorIndex === 0 ? 'fa-user-nurse text-turquoise' : ($colorIndex === 1 ? 'fa-user text-amber-500' : 'fa-user-plus text-gray-500');
                                         @endphp
-                                        
+
                                         <div class="team-member-avatar {{ $avatarBgClass }} relative rounded-full overflow-hidden mx-auto mt-4 mb-3" style="width: 100px; height: 100px;">
                                             @if(!empty($member['avatar']))
                                                 <img src="{{ $member['avatar'] }}" alt="{{ $member['name'] }}" class="object-cover w-full h-full">
@@ -200,7 +200,7 @@
                                                     <i class="fas {{ $avatarIconClass }} text-3xl"></i>
                                                 </div>
                                             @endif
-    
+
                                             @if($member['isLead'])
                                             <span class="absolute bottom-0 right-0 bg-purple text-white text-xs px-1.5 py-0.5 rounded-full">
                                                 <i class="mr-1 text-xs fas fa-star"></i>
@@ -208,7 +208,7 @@
                                             </span>
                                             @endif
                                         </div>
-    
+
                                         <div class="p-3 text-center">
                                             <h5 class="text-base font-medium text-dark">{{ $member['name'] }}</h5>
                                             <p class="text-gray-600 text-xs mt-0.5">{{ $member['role'] }}</p>
@@ -220,7 +220,7 @@
                     </div>
                     @endif
                 </div>
-    
+
                 <!-- Colonne latérale - Informations pratiques -->
                 <div class="space-y-6">
                     <!-- Carte d'informations de contact -->
@@ -231,7 +231,7 @@
                                 Informations pratiques
                             </h5>
                         </div>
-    
+
                         <div class="p-4 space-y-4">
                             @if($service->phone)
                             <div class="flex items-start">
@@ -247,7 +247,7 @@
                                 </div>
                             </div>
                             @endif
-    
+
                             @if($service->email)
                             <div class="flex items-start">
                                 <div class="flex items-center justify-center w-10 h-10 mr-3 rounded-full bg-purple/10 text-purple shrink-0">
@@ -262,7 +262,7 @@
                                 </div>
                             </div>
                             @endif
-    
+
                             @if($service->working_hours)
                             <div class="flex items-start">
                                 <div class="flex items-center justify-center w-10 h-10 mr-3 rounded-full bg-purple/10 text-purple shrink-0">
@@ -274,7 +274,7 @@
                                 </div>
                             </div>
                             @endif
-    
+
                             @if($service->location)
                             <div class="flex items-start">
                                 <div class="flex items-center justify-center w-10 h-10 mr-3 rounded-full bg-purple/10 text-purple shrink-0">
@@ -293,7 +293,7 @@
                             @endif
                         </div>
                     </div>
-    
+
                     <!-- Carte de prise de rendez-vous améliorée -->
                     <div class="overflow-hidden text-white rounded-lg shadow-md bg-gradient-to-br from-purple to-purple/80" data-aos="fade-left" data-aos-delay="100">
                         <div class="p-5">
@@ -319,7 +319,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Services associés avec design amélioré -->
                     <div class="overflow-hidden bg-white rounded-lg shadow-md" data-aos="fade-left" data-aos-delay="200">
                         <div class="p-4 bg-purple/10">
@@ -328,7 +328,7 @@
                                 Services associés
                             </h5>
                         </div>
-    
+
                         <div class="p-3">
                             <a href="{{ route('services') }}" class="block p-2 mb-2 transition-colors border border-gray-100 rounded-lg hover:bg-gray-50">
                                 <div class="flex items-center">
@@ -341,7 +341,7 @@
                                     </div>
                                 </div>
                             </a>
-    
+
                             <!-- Services associés de la même catégorie -->
                             @if(isset($relatedServices) && count($relatedServices) > 0)
                                 @foreach($relatedServices as $relatedService)
@@ -370,21 +370,21 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Lightbox amélioré -->
     <div id="lightbox" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-90">
         <button onclick="closeLightbox()" class="absolute text-white top-4 right-4 hover:text-gray-300">
             <i class="text-2xl fas fa-times"></i>
         </button>
-        
+
         <button id="prevButton" class="absolute text-white left-4 hover:text-gray-300">
             <i class="text-3xl fas fa-chevron-left"></i>
         </button>
-        
+
         <button id="nextButton" class="absolute text-white right-4 hover:text-gray-300">
             <i class="text-3xl fas fa-chevron-right"></i>
         </button>
-        
+
         <div class="w-full max-w-4xl p-2">
             <img id="lightboxImage" src="" alt="Image agrandie" class="max-w-full max-h-[80vh] mx-auto rounded shadow-xl">
             <div class="mt-4 text-center text-white">
@@ -392,7 +392,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         // Variables pour la galerie
         let currentIndex = 0;
@@ -403,7 +403,7 @@
                 @endforeach
             @endif
         ];
-        
+
         // Fonction pour ouvrir le lightbox
         function openLightbox(imageSrc, index) {
             document.getElementById('lightboxImage').src = imageSrc;
@@ -412,13 +412,13 @@
             currentIndex = index;
             updateImageCounter();
         }
-        
+
         // Fonction pour fermer le lightbox
         function closeLightbox() {
             document.getElementById('lightbox').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
-        
+
         // Mise à jour du compteur d'images
         function updateImageCounter() {
             const imageCount = document.getElementById('imageCount');
@@ -426,7 +426,7 @@
                 imageCount.textContent = `${currentIndex + 1} / ${images.length}`;
             }
         }
-        
+
         // Navigation entre les images
         const prevButton = document.getElementById('prevButton');
         if (prevButton) {
@@ -437,7 +437,7 @@
                 updateImageCounter();
             });
         }
-        
+
         const nextButton = document.getElementById('nextButton');
         if (nextButton) {
             nextButton.addEventListener('click', function(e) {
@@ -447,7 +447,7 @@
                 updateImageCounter();
             });
         }
-        
+
         // Fermer le lightbox en cliquant en dehors de l'image
         const lightbox = document.getElementById('lightbox');
         if (lightbox) {
@@ -457,12 +457,12 @@
                 }
             });
         }
-        
+
         // Navigation avec les touches du clavier
         document.addEventListener('keydown', function(e) {
             const lightbox = document.getElementById('lightbox');
             if (!lightbox || lightbox.classList.contains('hidden')) return;
-            
+
             if (e.key === 'Escape') {
                 closeLightbox();
             } else if (e.key === 'ArrowLeft') {
