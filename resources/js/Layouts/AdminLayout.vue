@@ -101,6 +101,11 @@ onMounted(() => {
                 </div>
 
                 <div class="flex items-center gap-4">
+                    <!-- View Site -->
+                    <a :href="route('home')" target="_blank" class="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="Voir le site public">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+
                     <!-- Notifications (Mock) -->
                     <button class="relative p-2 text-slate-400 hover:text-slate-600 transition-colors">
                         <i class="fas fa-bell"></i>
