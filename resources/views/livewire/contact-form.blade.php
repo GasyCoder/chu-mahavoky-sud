@@ -2,69 +2,69 @@
     <form wire:submit.prevent="submitForm">
         <div class="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
             <div>
-                <label for="name" class="block mb-2 text-dark">Nom complet <span class="text-purple">*</span></label>
-                <input wire:model.live="name" type="text" id="name" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none @error('name') border-red-600 @enderror">
-                @error('name') <span class="mt-1 text-sm text-red-600">{{ $message }}</span> @enderror
+                <label for="name" class="block mb-2 text-sm font-medium text-dark">Nom complet <span class="text-red-500">*</span></label>
+                <input wire:model.live="name" type="text" id="name" class="w-full rounded-xl border border-gray p-4 text-base focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none @error('name') border-red-500 @enderror">
+                @error('name') <span class="mt-1 text-sm text-red-500">{{ $message }}</span> @enderror
             </div>
             <div>
-                <label for="email" class="block mb-2 text-dark">Email <span class="text-purple">*</span></label>
-                <input wire:model.live="email" type="email" id="email" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none @error('email') border-red-600 @enderror">
-                @error('email') <span class="mt-1 text-sm text-red-600">{{ $message }}</span> @enderror
+                <label for="email" class="block mb-2 text-sm font-medium text-dark">Email <span class="text-red-500">*</span></label>
+                <input wire:model.live="email" type="email" id="email" class="w-full rounded-xl border border-gray p-4 text-base focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none @error('email') border-red-500 @enderror">
+                @error('email') <span class="mt-1 text-sm text-red-500">{{ $message }}</span> @enderror
             </div>
         </div>
 
         <div class="mb-6">
-            <label for="phone" class="block mb-2 text-dark">Téléphone</label>
-            <input wire:model.live="phone" type="tel" id="phone" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none @error('phone') border-red-600 @enderror">
-            @error('phone') <span class="mt-1 text-sm text-red-600">{{ $message }}</span> @enderror
+            <label for="phone" class="block mb-2 text-sm font-medium text-dark">Telephone</label>
+            <input wire:model.live="phone" type="tel" id="phone" class="w-full rounded-xl border border-gray p-4 text-base focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none @error('phone') border-red-500 @enderror">
+            @error('phone') <span class="mt-1 text-sm text-red-500">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-6">
-            <label for="subject" class="block mb-2 text-dark">Sujet <span class="text-purple">*</span></label>
-            <select wire:model.live="subject" id="subject" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none @error('subject') border-red-600 @enderror">
-                <option value="">Sélectionnez un sujet</option>
+            <label for="subject" class="block mb-2 text-sm font-medium text-dark">Sujet <span class="text-red-500">*</span></label>
+            <select wire:model.live="subject" id="subject" class="w-full rounded-xl border border-gray p-4 text-base focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none @error('subject') border-red-500 @enderror">
+                <option value="">Selectionnez un sujet</option>
                 <option value="Demande d'informations">Demande d'informations</option>
                 <option value="Rendez-vous">Rendez-vous</option>
-                <option value="Carrières">Carrières</option>
+                <option value="Carrieres">Carrieres</option>
                 <option value="Commentaires">Commentaires</option>
                 <option value="Autre">Autre</option>
             </select>
-            @error('subject') <span class="mt-1 text-sm text-red-600">{{ $message }}</span> @enderror
+            @error('subject') <span class="mt-1 text-sm text-red-500">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-6">
-            <label for="message" class="block mb-2 text-dark">Message <span class="text-purple">*</span></label>
-            <textarea wire:model.live="message" id="message" rows="6" class="w-full rounded-md border border-gray p-3 focus:border-purple focus:ring focus:ring-purple/20 focus:outline-none @error('message') border-red-600 @enderror"></textarea>
-            @error('message') <span class="mt-1 text-sm text-red-600">{{ $message }}</span> @enderror
+            <label for="message" class="block mb-2 text-sm font-medium text-dark">Message <span class="text-red-500">*</span></label>
+            <textarea wire:model.live="message" id="message" rows="6" class="w-full rounded-xl border border-gray p-4 text-base focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none @error('message') border-red-500 @enderror"></textarea>
+            @error('message') <span class="mt-1 text-sm text-red-500">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-6">
             <div class="flex items-start">
                 <div class="flex items-center h-5">
-                    <input wire:model.live="privacy" id="privacy" type="checkbox" class="w-4 h-4 rounded border border-gray focus:ring-purple @error('privacy') border-red-600 @enderror">
+                    <input wire:model.live="privacy" id="privacy" type="checkbox" class="w-4 h-4 rounded border border-gray focus:ring-primary @error('privacy') border-red-500 @enderror">
                 </div>
                 <label for="privacy" class="ml-2 text-sm text-gray-dark">
-                    J'accepte que mes données soient traitées conformément à la politique de confidentialité du site.
+                    J'accepte que mes donnees soient traitees conformement a la politique de confidentialite du site.
                 </label>
             </div>
-            @error('privacy') <span class="mt-1 text-sm text-red-600">{{ $message }}</span> @enderror
+            @error('privacy') <span class="mt-1 text-sm text-red-500">{{ $message }}</span> @enderror
         </div>
 
         @if($successMessage)
-        <div class="p-4 mb-6 border rounded-lg bg-turquoise/10 text-turquoise border-turquoise/20">
+        <div class="bg-green-50 text-green-700 border border-green-200 rounded-xl p-4 mb-6">
             {{ $successMessage }}
         </div>
         @endif
 
         @error('form')
-        <div class="p-4 mb-6 text-red-600 bg-red-100 border border-red-200 rounded-lg">
+        <div class="p-4 mb-6 text-red-500 bg-red-50 border border-red-200 rounded-xl">
             {{ $message }}
         </div>
         @enderror
 
         <button
             type="submit"
-            class="w-full py-3 font-medium text-white transition-opacity rounded-md bg-gradient-to-r from-purple to-turquoise hover:opacity-90"
+            class="w-full bg-primary rounded-xl py-4 font-medium text-white hover:bg-primary/90 transition-colors"
             wire:loading.attr="disabled"
             wire:loading.class="opacity-75"
         >

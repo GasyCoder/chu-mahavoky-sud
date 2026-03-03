@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'login/*',
         ]);
 
+        // Inertia Middleware
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleInertiaRequests::class,
+        ]);
+
         // Ajout du middleware de licence
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,

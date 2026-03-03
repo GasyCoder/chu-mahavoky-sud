@@ -1,73 +1,70 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
+import colors from 'tailwindcss/colors';
 
+/** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        './resources/js/**/*.vue',
     ],
 
     theme: {
         container: {
             center: true,
-            padding: "1rem",
+            padding: '2rem',
             screens: {
-                sm: "100%",
-                md: "768px",
-                lg: "992px",
-                xl: "1140px",
+                '2xl': '1400px',
             },
-        },
-        colors: {
-            primary: "#0067FF",
-            button: "#00A3FF",
-            black: "#000000",
-            white: "#FFFFFF",
-            dark: "#333333",
-            violet: {
-                DEFAULT: "#8B5CF6",
-                light: "#A78BFA",
-                dark: "#7C3AED"
-            },
-            pink: {
-                DEFAULT: "#EC4899",
-                light: "#F472B6",
-                dark: "#DB2777"
-            },
-            // Nouvelles couleurs basées sur l'image
-            purple: {
-                DEFAULT: "#8E2E9B", // Couleur pourpre/violet des bandeaux
-                light: "#A94DB7",
-                dark: "#721D7C"
-            },
-            turquoise: {
-                DEFAULT: "#5ECCC1", // Couleur turquoise du fond
-                light: "#8FE0D8",
-                dark: "#3BAFA4"
-            },
-            gray: {
-                DEFAULT: "#D9D9D9",
-                dark: "#797979",
-                light: "#F4F4F4",
-            },
-            transparent: "#00000000",
         },
         extend: {
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-                poppins: ["Poppins", "sans-serif"],
-                rubik: ["Rubik", "sans-serif"],
+            colors: {
+                border: 'hsl(var(--border))',
+                input: 'hsl(var(--input))',
+                ring: 'hsl(var(--ring))',
+                background: 'hsl(var(--background))',
+                foreground: 'hsl(var(--foreground))',
+                primary: {
+                    DEFAULT: '#0055A4', // Bleu CHU Profond
+                    foreground: '#FFFFFF',
+                    50: '#E6F0F9',
+                    100: '#CCE2F3',
+                    200: '#99C4E7',
+                    300: '#66A7DB',
+                    400: '#3389CF',
+                    500: '#0055A4',
+                    600: '#004483',
+                    700: '#003362',
+                    800: '#002241',
+                    900: '#001121',
+                },
+                secondary: {
+                    DEFAULT: '#00A19D', // Vert Soin / Cyan
+                    foreground: '#FFFFFF',
+                },
+                destructive: {
+                    DEFAULT: colors.red[600],
+                    foreground: colors.slate[50],
+                },
+                muted: {
+                    DEFAULT: 'hsl(var(--muted))',
+                    foreground: 'hsl(var(--muted-foreground))',
+                },
+                accent: {
+                    DEFAULT: 'hsl(var(--accent))',
+                    foreground: 'hsl(var(--accent-foreground))',
+                },
             },
-            fontSize: {
-                "4xl": "60px", // heading 1
-                "3xl": "40px", // heading 2
-                "2xl": "36px", // heading 3
-                xl: "28px", // heading 4
-                lg: "20px",
-                md: "18px",
-                base: "16px",
-                sm: "14px",
+            fontFamily: {
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+            },
+            borderRadius: {
+                lg: 'var(--radius)',
+                md: 'calc(var(--radius) - 2px)',
+                sm: 'calc(var(--radius) - 4px)',
             },
         },
     },

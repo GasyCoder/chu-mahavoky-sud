@@ -31,13 +31,49 @@ class Service extends Model
         'active'
     ];
 
-    protected $casts = [
-        'images' => 'array',
-        'team_members' => 'array',
-        'equipments' => 'array',
-        'featured' => 'boolean',
-        'active' => 'boolean',
-    ];
+    protected $appends = ['image_url', 'formatted_team_members'];
+
+    // URL de l'image principale
+    public function getImageUrlAttribute()
+    {
+        if ($this->image) {
+            return asset('storage/' . $this->image);
+        }
+        return asset('assets/herobg.jpg');
+    }
+
+    // Formater les membres de l'équipe avec les URLs complètes
+    public function getFormattedTeamMembersAttribute()
+    {
+        $team = $this->team_members;
+        
+        if (!$team) return null;
+
+        // Formater le leader
+        if (isset($team['leader']) && isset($team['leader']['photo'])) {
+            // On vérifie si c'est déjà une URL ou juste un nom de fichier
+            if (!filter_var($team['leader']['photo'], FILTER_VALIDATE_URL)) {
+                $team['leader']['photo_url'] = asset('storage/' . $team['leader']['photo']);
+            } else {
+                $team['leader']['photo_url'] = $team['leader']['photo'];
+            }
+        }
+
+        // Formater les membres
+        if (isset($team['members']) && is_array($team['members'])) {
+            foreach ($team['members'] as $key => $member) {
+                if (isset($member['photo'])) {
+                    if (!filter_var($member['photo'], FILTER_VALIDATE_URL)) {
+                        $team['members'][$key]['photo_url'] = asset('storage/' . $member['photo']);
+                    } else {
+                        $team['members'][$key]['photo_url'] = $member['photo'];
+                    }
+                }
+            }
+        }
+
+        return $team;
+    }
 
     // S'assurer que les images sont toujours un tableau, même si null
     public function getImagesAttribute($value)

@@ -90,6 +90,69 @@ class Setting extends Model
     }
 
     /**
+     * Récupérer toutes les configurations structurées pour le frontend
+     *
+     * @return array
+     */
+    public static function allSettings()
+    {
+        $logo = self::get('logo');
+        if ($logo && file_exists(storage_path('app/public/' . $logo))) {
+            $logoUrl = asset('storage/' . $logo);
+        } else {
+            $logoUrl = asset('assets/logo.png');
+        }
+
+        $favicon = self::get('favicon');
+        if ($favicon && file_exists(storage_path('app/public/' . $favicon))) {
+            $faviconUrl = asset('storage/' . $favicon);
+        } else {
+            $faviconUrl = asset('assets/logo.png');
+        }
+
+        return [
+            ...self::getArray('general'),
+            'logo' => $logoUrl,
+            'favicon' => $faviconUrl,
+            ...self::getArray('header'),
+            'contact' => [
+                'phone' => self::get('contact_phone'),
+                'emergency' => self::get('contact_emergency'),
+                'email' => self::get('contact_email'),
+                'direction_email' => self::get('contact_direction_email'),
+                'address' => self::get('contact_address'),
+            ],
+            'hours' => [
+                'weekdays' => self::get('opening_hours'),
+                'weekend' => self::get('weekend_hours'),
+            ],
+            'social' => [
+                'facebook' => self::get('facebook_url'),
+                'twitter' => self::get('twitter_url'),
+                'linkedin' => self::get('linkedin_url'),
+                'youtube' => self::get('youtube_url'),
+            ],
+            'director' => [
+                'name' => self::get('director_name'),
+                'title' => self::get('director_title'),
+                'message' => self::get('director_message'),
+                'photo' => (function() {
+                    $photo = self::get('director_photo');
+                    if ($photo && file_exists(storage_path('app/public/' . $photo))) {
+                        return asset('storage/' . $photo);
+                    }
+                    return asset('assets/about/directeur.png');
+                })(),
+            ],
+            'seo' => [
+                'title' => self::get('meta_title', self::get('site_name')),
+                'description' => self::get('meta_description', self::get('site_description')),
+                'keywords' => self::get('meta_keywords'),
+            ],
+        ];
+    }
+
+    /**
      * Vider le cache des paramètres
      */
     public static function clearCache()

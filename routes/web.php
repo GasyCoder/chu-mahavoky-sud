@@ -1,49 +1,61 @@
 <?php
 
-use App\Livewire\HomePage;
-use App\Livewire\Pages\News;
-use App\Livewire\Pages\About;
-use App\Livewire\Pages\Contact;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Livewire\Admin\Settings;
-use App\Livewire\Pages\ServicesIndex;
 use App\Livewire\Admin\BlogAdmin;
-use App\Livewire\Admin\Dashboard;
-use App\Livewire\Pages\NewsDetail;
 use App\Livewire\Admin\ServicesAdmin;
-use App\Livewire\Pages\ServiceDetail;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\ServicesTechnique;
 use App\Http\Controllers\ProfileController;
-use App\Livewire\Admin\MedicalServicesAdmin;
-use App\Livewire\Admin\AdministrationServicesAdmin;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NewsDetailController;
+use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\ServiceDetailController;
 
-Route::get('/', HomePage::class)->name('home');
+Route::get('/', HomeController::class)->name('home');
+Route::get('/nos-medecins', HomeController::class)->name('doctors');
 
-Route::get('/a-propos', About::class)->name('about');
-Route::get('/contact', Contact::class)->name('contact');
+Route::get('/a-propos', AboutController::class)->name('about');
+Route::get('/contact', [ContactController::class, '__invoke'])->name('contact');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-Route::get('/nos-services', ServicesIndex::class)->name('services');
-Route::get('/nos-services/{service}', ServiceDetail::class)->name('services.show');
+Route::get('/nos-services', [ServicesController::class, 'index'])->name('services');
+Route::get('/nos-services/{service}', [ServiceDetailController::class, 'show'])->name('services.show');
 
-Route::get('/nos-actualites', News::class)->name('news');
-Route::get('/nos-actualites/{news}', NewsDetail::class)->name('news.show');
+Route::get('/nos-actualites', [NewsController::class, 'index'])->name('news');
+Route::get('/nos-actualites/{news}', [NewsDetailController::class, 'show'])->name('news.show');
+
+use App\Http\Controllers\Admin\NewsAdminController;
+use App\Http\Controllers\Admin\SettingAdminController;
+use App\Http\Controllers\Admin\ServiceAdminController;
 
 Route::middleware(['auth', 'admin'])->group(function () {
 
-    Route::get('/admin/dashboard', Dashboard::class)->name('admin.dashboard');
+    Route::get('/admin/dashboard', DashboardController::class)->name('admin.dashboard');
 
-    // Services généraux (redirection vers la page d'aperçu des services)
-    // Route::get('/admin/services', ServicesAdmin::class)->name('admin.services');
+    // Services médicaux et administratifs via le même contrôleur
+    Route::get('/admin/services/medical', function (\Illuminate\Http\Request $request) {
+        return app(ServiceAdminController::class)->index($request, 'technical');
+    })->name('admin.services.medical');
 
-    // Services médicaux
-    Route::get('/admin/services/medical', ServicesTechnique::class)->name('admin.services.medical');
+    Route::get('/admin/services/administration', function (\Illuminate\Http\Request $request) {
+        return app(ServiceAdminController::class)->index($request, 'administrative');
+    })->name('admin.services.administration');
+    
+    Route::post('/admin/services/store', [ServiceAdminController::class, 'store'])->name('admin.services.store');
+    Route::delete('/admin/services/{service}', [ServiceAdminController::class, 'destroy'])->name('admin.services.destroy');
 
-    // Services administratifs
-    Route::get('/admin/services/administration', ServicesAdmin::class)->name('admin.services.administration');
+    Route::get('/admin/actualites', [NewsAdminController::class, 'index'])->name('admin.news');
+    Route::post('/admin/actualites', [NewsAdminController::class, 'store'])->name('admin.news.store');
+    Route::delete('/admin/actualites/{news}', [NewsAdminController::class, 'destroy'])->name('admin.news.destroy');
 
-    Route::get('/admin/actualites', BlogAdmin::class)->name('admin.news');
-
-    Route::get('/admin/parametre', Settings::class)->name('admin.setting');
+    Route::get('/admin/parametre', [SettingAdminController::class, 'index'])->name('admin.setting');
+    Route::post('/admin/parametre/general', [SettingAdminController::class, 'updateGeneral'])->name('admin.settings.general');
+    Route::post('/admin/parametre/contact', [SettingAdminController::class, 'updateContact'])->name('admin.settings.contact');
+    Route::post('/admin/parametre/director', [SettingAdminController::class, 'updateDirector'])->name('admin.settings.director');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

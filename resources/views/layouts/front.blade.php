@@ -32,7 +32,7 @@
         {{ $slot }}
 
         <!-- Bouton retour en haut -->
-        <button id="backToTop" class="fixed z-50 hidden w-12 h-12 transition-all duration-300 rounded-full shadow-lg bottom-8 right-8 bg-purple hover:bg-turquoise">
+        <button id="backToTop" class="fixed z-50 hidden w-12 h-12 transition-all duration-300 rounded-full shadow-lg bottom-8 right-8 bg-primary hover:bg-primary/90 opacity-0">
             <i class="text-white fa fa-arrow-up"></i>
         </button>
 

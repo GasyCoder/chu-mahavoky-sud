@@ -10,11 +10,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "inertiajs/inertia-laravel": "^2.0",
         "laravel-lang/common": "^6.7",
         "laravel/framework": "^12.5.0",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
-        "mews/purifier": "^3.4"
+        "mews/purifier": "^3.4",
+        "tightenco/ziggy": "^2.6"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",

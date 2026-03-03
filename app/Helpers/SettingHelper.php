@@ -52,7 +52,20 @@ class SettingHelper
         $path = self::get($key, $default);
 
         if (empty($path)) {
+            if ($key === 'logo') return asset('assets/logo.png');
+            if ($key === 'favicon') return asset('assets/logo.png');
+            if ($key === 'director_photo') return asset('assets/about/directeur.png');
             return $default;
+        }
+
+        // Si le chemin commence par settings/, on vérifie si le fichier existe
+        if (str_starts_with($path, 'settings/')) {
+            $storagePath = storage_path('app/public/' . $path);
+            if (!file_exists($storagePath)) {
+                if ($key === 'logo') return asset('assets/logo.png');
+                if ($key === 'favicon') return asset('assets/logo.png');
+                if ($key === 'director_photo') return asset('assets/about/directeur.png');
+            }
         }
 
         return asset('storage/' . $path);

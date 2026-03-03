@@ -27,6 +27,8 @@ class Blog extends Model
         'is_featured' => 'boolean',
     ];
 
+    protected $appends = ['image_url'];
+
     // Les statuts possibles pour un article
     const STATUS_DRAFT = 'draft';
     const STATUS_PUBLISHED = 'published';
@@ -114,11 +116,12 @@ class Blog extends Model
     // Retourne l'URL formatée de l'image
     public function getImageUrlAttribute()
     {
-        if ($this->image) {
+        if ($this->image && file_exists(public_path('storage/' . $this->image))) {
             return asset('storage/' . $this->image);
         }
 
-        return asset('assets/news/default.jpg');
+        // Image par défaut si le fichier n'existe pas ou n'est pas défini
+        return asset('assets/herobg.jpg'); 
     }
 
     // Retourne la date de publication formatée
