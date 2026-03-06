@@ -31,6 +31,7 @@ Route::get('/nos-actualites/{news}', [NewsDetailController::class, 'show'])->nam
 use App\Http\Controllers\Admin\NewsAdminController;
 use App\Http\Controllers\Admin\SettingAdminController;
 use App\Http\Controllers\Admin\ServiceAdminController;
+use App\Http\Controllers\Admin\PartnerAdminController;
 
 Route::middleware(['auth', 'admin'])->group(function () {
 
@@ -57,6 +58,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/parametre/contact', [SettingAdminController::class, 'updateContact'])->name('admin.settings.contact');
     Route::post('/admin/parametre/director', [SettingAdminController::class, 'updateDirector'])->name('admin.settings.director');
     Route::post('/admin/parametre/display', [SettingAdminController::class, 'updateDisplay'])->name('admin.settings.display');
+
+    Route::get('/admin/parametre/display', [SettingAdminController::class, 'index'])->name('admin.settings.display'); // Added to fix redirect issue if any
+    
+    Route::get('/admin/partenaires', [PartnerAdminController::class, 'index'])->name('admin.partners');
+    Route::post('/admin/partenaires', [PartnerAdminController::class, 'store'])->name('admin.partners.store');
+    Route::post('/admin/partenaires/{partner}', [PartnerAdminController::class, 'update'])->name('admin.partners.update');
+    Route::delete('/admin/partenaires/{partner}', [PartnerAdminController::class, 'destroy'])->name('admin.partners.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

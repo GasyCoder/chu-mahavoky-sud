@@ -43,6 +43,7 @@ const contactForm = useForm({
 
 const displayForm = useForm({
     show_experts_section: props.settings.show_experts_section,
+    show_partners_section: props.settings.show_partners_section,
 });
 
 const submitGeneral = () => {
@@ -163,7 +164,7 @@ const submitDisplay = () => {
                                                         <i class="fas fa-hospital text-2xl"></i>
                                                     </div>
                                                     
-                                                    <input type="file" @input="generalForm.logo = $event.target.files[0]" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                                                    <input type="file" @input="generalForm.logo = $event.target.files[0]" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
                                                 </div>
                                                 <p class="mt-3 text-[10px] text-blue-600/70 font-medium italic text-center">Format suggéré: PNG ou SVG transparent (Max 2Mo)</p>
                                             </div>
@@ -350,6 +351,37 @@ const submitDisplay = () => {
                                                             ]"
                                                         >
                                                             <i v-if="displayForm.show_experts_section" class="fas fa-check text-[10px] text-amber-600"></i>
+                                                            <i v-else class="fas fa-times text-[10px] text-slate-400"></i>
+                                                        </span>
+                                                    </button>
+                                                </div>
+
+                                                <div class="flex items-center justify-between p-5 bg-white rounded-2xl border border-amber-200 shadow-sm transition-all hover:shadow-md">
+                                                    <div class="flex items-center gap-4">
+                                                        <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
+                                                            <i class="fas fa-handshake text-xl"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h4 class="text-sm font-bold text-slate-900">Ils nous font confiance</h4>
+                                                            <p class="text-[11px] text-slate-500 mt-0.5">Activer/Masquer la section des partenaires</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <button 
+                                                        type="button"
+                                                        @click="displayForm.show_partners_section = !displayForm.show_partners_section"
+                                                        :class="[
+                                                            displayForm.show_partners_section ? 'bg-amber-500' : 'bg-slate-200',
+                                                            'relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2'
+                                                        ]"
+                                                    >
+                                                        <span 
+                                                            :class="[
+                                                                displayForm.show_partners_section ? 'translate-x-5' : 'translate-x-0',
+                                                                'pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out flex items-center justify-center'
+                                                            ]"
+                                                        >
+                                                            <i v-if="displayForm.show_partners_section" class="fas fa-check text-[10px] text-amber-600"></i>
                                                             <i v-else class="fas fa-times text-[10px] text-slate-400"></i>
                                                         </span>
                                                     </button>

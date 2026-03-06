@@ -116,6 +116,7 @@ class Setting extends Model
             'favicon' => $faviconUrl,
             ...self::getArray('header'),
             'show_experts_section' => filter_var(self::get('show_experts_section', false), FILTER_VALIDATE_BOOLEAN),
+            'show_partners_section' => filter_var(self::get('show_partners_section', true), FILTER_VALIDATE_BOOLEAN),
             'contact' => [
                 'phone' => self::get('contact_phone'),
                 'emergency' => self::get('contact_emergency'),

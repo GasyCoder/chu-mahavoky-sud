@@ -73,6 +73,6 @@ const director = computed(() => ({
         <NewsSection :news="latestNews" />
 
         <!-- Partners Section -->
-        <PartnersSection />
+        <PartnersSection v-if="settings?.show_partners_section !== false" />
     </AppLayout>
 </template>

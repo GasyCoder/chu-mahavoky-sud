@@ -15,6 +15,7 @@ const navigation = [
     { name: 'Services Médicaux', href: route('admin.services.medical'), icon: 'fas fa-stethoscope' },
     { name: 'Services Administratifs', href: route('admin.services.administration'), icon: 'fas fa-building' },
     { name: 'Actualités', href: route('admin.news'), icon: 'fas fa-newspaper' },
+    { name: 'Partenaires', href: route('admin.partners'), icon: 'fas fa-handshake' },
     { name: 'Paramètres', href: route('admin.setting'), icon: 'fas fa-cog' },
 ];
 
