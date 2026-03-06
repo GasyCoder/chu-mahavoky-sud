@@ -56,6 +56,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/parametre/general', [SettingAdminController::class, 'updateGeneral'])->name('admin.settings.general');
     Route::post('/admin/parametre/contact', [SettingAdminController::class, 'updateContact'])->name('admin.settings.contact');
     Route::post('/admin/parametre/director', [SettingAdminController::class, 'updateDirector'])->name('admin.settings.director');
+    Route::post('/admin/parametre/display', [SettingAdminController::class, 'updateDisplay'])->name('admin.settings.display');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

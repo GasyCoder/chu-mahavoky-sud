@@ -64,7 +64,7 @@ const director = computed(() => ({
         <EmergencyBanner :emergencyNumber="settings?.contact?.emergency || '+261 20 00 000 00'" />
 
         <!-- Doctors Section -->
-        <DoctorsSection />
+        <DoctorsSection v-if="settings?.show_experts_section !== false" />
 
         <!-- Infrastructure Section -->
         <InfrastructureSection />

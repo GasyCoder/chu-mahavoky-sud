@@ -37,11 +37,24 @@ class SettingAdminController extends Controller
             'director_title' => Setting::get('director_title', ''),
             'director_message' => Setting::get('director_message', ''),
             'director_photo_url' => Setting::get('director_photo') ? asset('storage/' . Setting::get('director_photo')) : null,
+
+            'show_experts_section' => filter_var(Setting::get('show_experts_section', false), FILTER_VALIDATE_BOOLEAN),
         ];
 
         return Inertia::render('Admin/Settings', [
             'settings' => $settings
         ]);
+    }
+
+    public function updateDisplay(Request $request)
+    {
+        $validated = $request->validate([
+            'show_experts_section' => 'required|boolean',
+        ]);
+
+        Setting::set('show_experts_section', $validated['show_experts_section'], 'display');
+
+        return redirect()->back()->with('success', 'Paramètres d\'affichage mis à jour avec succès.');
     }
 
     public function updateGeneral(Request $request)

@@ -115,6 +115,7 @@ class Setting extends Model
             'logo' => $logoUrl,
             'favicon' => $faviconUrl,
             ...self::getArray('header'),
+            'show_experts_section' => filter_var(self::get('show_experts_section', false), FILTER_VALIDATE_BOOLEAN),
             'contact' => [
                 'phone' => self::get('contact_phone'),
                 'emergency' => self::get('contact_emergency'),
