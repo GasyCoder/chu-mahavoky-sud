@@ -13,9 +13,27 @@
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
+        <div class="mt-4" x-data="{ show: false }">
             <x-input-label for="password" :value="__('Password')" class="text-sm font-medium text-dark" />
-            <x-text-input id="password" class="block mt-1 w-full rounded-md border-gray p-2 focus:ring-turquoise focus:border-turquoise @error('password') border-pink @enderror" type="password" name="password" required autocomplete="current-password" />
+            <div class="relative mt-1">
+                <x-text-input 
+                    id="password" 
+                    class="block w-full rounded-md border-gray p-2 pr-10 focus:ring-turquoise focus:border-turquoise @error('password') border-pink @enderror" 
+                    type="password"
+                    x-bind:type="show ? 'text' : 'password'" 
+                    name="password" 
+                    required 
+                    autocomplete="current-password" 
+                />
+                <button 
+                    type="button" 
+                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-turquoise transition-colors focus:outline-none" 
+                    @click="show = !show"
+                    aria-label="Toggle password visibility"
+                >
+                    <i class="fas" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+                </button>
+            </div>
             <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-pink" />
         </div>
 
