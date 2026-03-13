@@ -1,67 +1,82 @@
 <script setup>
-const features = [
+import { computed } from 'vue';
+import { Link } from '@inertiajs/vue3';
+import SectionHeader from '@/Components/Ui/SectionHeader.vue';
+
+const props = defineProps({
+    equipments: {
+        type: Array,
+        default: () => []
+    }
+});
+
+const defaultFeatures = [
     {
         icon: 'fa-microscope',
-        title: 'Laboratoire Moderne',
+        name: 'Laboratoire Moderne',
         description: 'Équipements de pointe pour des analyses précises et rapides',
-        image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=600&h=400&fit=crop'
+        image_url: null
     },
     {
         icon: 'fa-procedures',
-        title: 'Blocs Opératoires',
+        name: 'Blocs Opératoires',
         description: 'Salles d\'opération stériles avec technologies avancées',
-        image: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=600&h=400&fit=crop'
+        image_url: null
     },
     {
         icon: 'fa-x-ray',
-        title: 'Imagerie Médicale',
+        name: 'Imagerie Médicale',
         description: 'Scanner, IRM et radiologie numérique de dernière génération',
-        image: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=600&h=400&fit=crop'
+        image_url: null
     }
 ];
+
+const displayFeatures = computed(() =>
+    props.equipments.length > 0 ? props.equipments : defaultFeatures
+);
 </script>
 
 <template>
-    <section class="py-20 md:py-28 bg-white relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Section Header -->
-            <div class="text-center mb-16" data-aos="fade-up">
-                <div class="inline-flex items-center space-x-2 bg-blue-100 rounded-full px-4 py-2 mb-4">
-                    <i class="fas fa-hospital-alt text-blue-600 text-sm"></i>
-                    <span class="text-sm font-semibold text-blue-600">Infrastructure</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    Nos <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Équipements</span>
-                </h2>
-                <div class="flex items-center justify-center space-x-2 mb-4">
-                    <div class="w-16 h-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full"></div>
-                </div>
-                <p class="text-gray-600 max-w-2xl mx-auto text-lg">
-                    Des technologies médicales de pointe pour un diagnostic et un traitement optimaux
-                </p>
-            </div>
+    <section class="py-20 lg:py-28 bg-background border-b border-border/40 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <SectionHeader
+                label="Infrastructure"
+                title="Nos Équipements"
+                description="Des technologies médicales de pointe pour un diagnostic et un traitement optimaux."
+            />
 
             <!-- Features Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div v-for="(feature, index) in features" :key="index"
-                    class="group relative overflow-hidden rounded-3xl shadow-lg"
-                    :data-aos="`fade-up`"
-                    :data-aos-delay="index * 150">
-                    <!-- Image -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                <div
+                    v-for="(feature, index) in displayFeatures"
+                    :key="feature.id || index"
+                    class="group relative overflow-hidden rounded-2xl border border-border shadow-lg hover:shadow-2xl transition-all duration-500"
+                    data-aos="fade-up"
+                    :data-aos-delay="index * 120"
+                >
+                    <!-- Image or Placeholder -->
                     <div class="aspect-[4/3] overflow-hidden">
-                        <img :src="feature.image" :alt="feature.title"
-                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent"></div>
+                        <img
+                            v-if="feature.image_url"
+                            :src="feature.image_url"
+                            :alt="feature.name"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div v-else class="w-full h-full bg-gradient-to-br from-primary/20 via-primary/10 to-secondary/20 flex items-center justify-center">
+                            <i :class="`fas ${feature.icon} text-primary/30 text-6xl`"></i>
+                        </div>
+                        <!-- Dark overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent group-hover:from-black/85 transition-colors duration-500"></div>
                     </div>
 
-                    <!-- Content Overlay -->
+                    <!-- Content overlay -->
                     <div class="absolute inset-0 flex flex-col justify-end p-6">
-                        <div class="relative">
-                            <div class="flex items-center space-x-3 mb-3">
-                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-                                    <i :class="`fas ${feature.icon} text-white text-lg`"></i>
+                        <div class="transform transition-transform duration-500 group-hover:-translate-y-1">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-11 h-11 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
+                                    <i :class="`fas ${feature.icon} text-primary-foreground text-base`"></i>
                                 </div>
-                                <h3 class="text-xl font-bold text-white">{{ feature.title }}</h3>
+                                <h3 class="text-lg font-bold text-white tracking-tight">{{ feature.name }}</h3>
                             </div>
                             <p class="text-gray-300 text-sm leading-relaxed">
                                 {{ feature.description }}
@@ -72,12 +87,16 @@ const features = [
             </div>
 
             <!-- CTA -->
-            <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="450">
-                <a href="#contact"
-                    class="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-2xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 hover:scale-105">
+            <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="400">
+                <Link
+                    :href="route('contact')"
+                    class="inline-flex items-center gap-2.5 px-8 py-3.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-[1.02] active:scale-95"
+                >
                     <span>Visiter nos installations</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </Link>
             </div>
         </div>
     </section>

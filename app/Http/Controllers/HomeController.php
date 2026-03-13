@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Equipment;
 use App\Models\Service;
 use App\Models\Setting;
 use Inertia\Inertia;
@@ -57,11 +58,21 @@ class HomeController extends Controller
         // On ne garde que les 4 premiers pour le design slim de l'accueil
         $doctors = array_slice($doctors, 0, 4);
 
+        $featuredServices = Service::where('active', true)
+            ->where('featured', true)
+            ->orderBy('order')
+            ->take(6)
+            ->get(['id', 'name', 'slug', 'icon', 'short_description']);
+
+        $equipments = Equipment::active()->ordered()->get();
+
         return Inertia::render('Home', [
             'settings' => $settings,
             'latestNews' => $latestNews,
             'totalServices' => Service::count(),
             'doctors' => $doctors,
+            'featuredServices' => $featuredServices,
+            'equipments' => $equipments,
         ]);
     }
 }

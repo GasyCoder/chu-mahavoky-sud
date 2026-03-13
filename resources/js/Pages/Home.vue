@@ -24,11 +24,20 @@ const props = defineProps({
     totalServices: {
         type: Number,
         default: 0
+    },
+    featuredServices: {
+        type: Array,
+        default: () => []
+    },
+    equipments: {
+        type: Array,
+        default: () => []
     }
 });
 
 const siteInfo = computed(() => ({
-    name: props.settings?.site_name || 'CHU MAHAVOKY ATSIMO',
+    name: props.settings?.hero_title || props.settings?.site_name || 'CHU MAHAVOKY ATSIMO',
+    hero_subtitle: props.settings?.hero_subtitle || 'Mahajanga — Boeny',
     description: props.settings?.site_description || 'Centre Hospitalier Universitaire',
     slogan: props.settings?.site_slogan || 'Excellence médicale au service de la vie. Des soins de qualité accessibles à tous.',
     background: props.settings?.hero_background || '/assets/herobg.jpg',
@@ -52,25 +61,25 @@ const director = computed(() => ({
         <HeroSection :siteInfo="siteInfo" />
 
         <!-- Stats Counter (overlapping hero) -->
-        <StatsCounter :totalServices="totalServices" />
+        <StatsCounter v-if="settings?.show_stats_section !== false" :totalServices="totalServices" :stats="settings?.stats" />
 
         <!-- Services Section -->
-        <ServicesSection />
+        <ServicesSection v-if="settings?.show_services_section !== false" :services="featuredServices" :sectionInfo="settings?.services_section" />
 
         <!-- About Section (Director Message) -->
-        <AboutSection :director="director" />
+        <AboutSection v-if="settings?.show_about_section !== false" :director="director" />
 
         <!-- Emergency Banner -->
-        <EmergencyBanner :emergencyNumber="settings?.contact?.emergency || '+261 20 00 000 00'" />
+        <EmergencyBanner v-if="settings?.show_emergency_section !== false" :emergencyNumber="settings?.contact?.emergency || '+261 20 00 000 00'" />
 
         <!-- Doctors Section -->
         <DoctorsSection v-if="settings?.show_experts_section !== false" />
 
         <!-- Infrastructure Section -->
-        <InfrastructureSection />
+        <InfrastructureSection v-if="settings?.show_infrastructure_section !== false" :equipments="equipments" />
 
         <!-- News Section -->
-        <NewsSection :news="latestNews" />
+        <NewsSection v-if="settings?.show_news_section !== false" :news="latestNews" />
 
         <!-- Partners Section -->
         <PartnersSection v-if="settings?.show_partners_section !== false" />
