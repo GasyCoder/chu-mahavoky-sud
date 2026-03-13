@@ -1,6 +1,8 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import Card from '@/Components/Ui/Card.vue';
+import Badge from '@/Components/Ui/Badge.vue';
 
 const props = defineProps({
     stats: Object,
@@ -8,115 +10,141 @@ const props = defineProps({
 });
 
 const cards = [
-    { name: 'Équipe Médicale', value: props.stats.totalUsers, icon: 'fas fa-user-md', color: 'text-blue-600', bg: 'bg-blue-100' },
-    { name: 'Services Actifs', value: props.stats.totalServices, icon: 'fas fa-hospital', color: 'text-indigo-600', bg: 'bg-indigo-100' },
-    { name: 'Actualités', value: '12', icon: 'fas fa-newspaper', color: 'text-emerald-600', bg: 'bg-emerald-100' },
-    { name: 'Consultations', value: '450', icon: 'fas fa-calendar-check', color: 'text-amber-600', bg: 'bg-amber-100' },
+    { name: 'Équipe Médicale', value: props.stats.totalUsers, icon: 'fas fa-user-md', color: 'text-blue-600', bg: 'bg-blue-50', iconBg: 'bg-blue-100', ring: 'ring-blue-600/10' },
+    { name: 'Services Actifs', value: props.stats.totalServices, icon: 'fas fa-hospital', color: 'text-indigo-600', bg: 'bg-indigo-50', iconBg: 'bg-indigo-100', ring: 'ring-indigo-600/10' },
+    { name: 'Actualités', value: '12', icon: 'fas fa-newspaper', color: 'text-emerald-600', bg: 'bg-emerald-50', iconBg: 'bg-emerald-100', ring: 'ring-emerald-600/10' },
+    { name: 'Consultations', value: '450', icon: 'fas fa-calendar-check', color: 'text-amber-600', bg: 'bg-amber-50', iconBg: 'bg-amber-100', ring: 'ring-amber-600/10' },
 ];
 </script>
 
 <template>
     <AdminLayout title="Tableau de bord">
         <template #actions>
-            <Link :href="route('admin.news')" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-medium text-white text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-colors">
-                <i class="fas fa-plus mr-2"></i> Publier une annonce
+            <Link :href="route('admin.news')" class="inline-flex items-center px-4 py-2.5 bg-blue-600 border border-transparent rounded-lg font-semibold text-white text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-all active:scale-[0.98]">
+                <i class="fas fa-plus mr-2 text-xs"></i> Publier une annonce
             </Link>
         </template>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div v-for="card in cards" :key="card.name" class="bg-white rounded-lg border border-slate-200 p-6 shadow-sm flex items-center">
-                <div :class="[card.bg, card.color, 'p-4 rounded-lg flex-shrink-0']">
-                    <i :class="[card.icon, 'text-xl w-6 text-center']"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-slate-500 truncate">{{ card.name }}</p>
-                    <p class="text-2xl font-bold text-slate-900">{{ card.value }}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            <div
+                v-for="card in cards"
+                :key="card.name"
+                class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition-all duration-200 group"
+            >
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">{{ card.name }}</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-1 tracking-tight">{{ card.value }}</p>
+                    </div>
+                    <div
+                        :class="[card.iconBg, card.color, card.ring]"
+                        class="w-11 h-11 rounded-xl flex items-center justify-center ring-4 group-hover:scale-110 transition-transform duration-200"
+                    >
+                        <i :class="[card.icon, 'text-base']"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Two Column Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Table Users -->
-            <div class="lg:col-span-2 bg-white rounded-lg border border-slate-200 shadow-sm">
-                <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                    <h2 class="text-lg font-medium text-slate-900">Personnel récent</h2>
-                    <Link :href="route('profile.edit')" class="text-sm font-medium text-blue-600 hover:text-blue-500">Voir tout</Link>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-slate-200">
-                        <thead class="bg-slate-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Utilisateur</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Rôle</th>
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Date d'ajout</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-slate-200">
-                            <tr v-for="user in recentUsers" :key="user.id" class="hover:bg-slate-50 transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Recent Users Table -->
+            <div class="lg:col-span-2">
+                <Card title="Personnel récent" :padding="false">
+                    <template #header-actions>
+                        <Link :href="route('profile.edit')" class="text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors">
+                            Voir tout
+                        </Link>
+                    </template>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-100">
+                            <thead>
+                                <tr class="bg-slate-50/80">
+                                    <th scope="col" class="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Utilisateur</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Rôle</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Date d'ajout</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr v-for="user in recentUsers" :key="user.id" class="hover:bg-slate-50/60 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center text-blue-600 font-bold text-sm flex-shrink-0">
                                                 {{ user.name?.charAt(0) }}
                                             </div>
+                                            <div class="min-w-0">
+                                                <p class="text-sm font-semibold text-slate-900 truncate">{{ user.name }}</p>
+                                                <p class="text-xs text-slate-500 truncate">{{ user.email }}</p>
+                                            </div>
                                         </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-slate-900">{{ user.name }}</div>
-                                            <div class="text-sm text-slate-500">{{ user.email }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <Badge variant="default" size="sm">{{ user.role }}</Badge>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-500">
+                                        {{ user.created_at }}
+                                    </td>
+                                </tr>
+                                <tr v-if="recentUsers.length === 0">
+                                    <td colspan="3" class="px-6 py-12 text-center">
+                                        <div class="text-slate-400">
+                                            <i class="fas fa-users text-2xl mb-2"></i>
+                                            <p class="text-sm">Aucun utilisateur trouvé.</p>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800 capitalize">
-                                        {{ user.role }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-500">
-                                    {{ user.created_at }}
-                                </td>
-                            </tr>
-                            <tr v-if="recentUsers.length === 0">
-                                <td colspan="3" class="px-6 py-10 text-center text-slate-500">
-                                    Aucun utilisateur trouvé.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </Card>
             </div>
 
-            <!-- Quick Links -->
+            <!-- Right Column -->
             <div class="space-y-6">
-                <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
-                    <h2 class="text-lg font-medium text-slate-900 mb-4">Raccourcis</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <Link :href="route('admin.news')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
-                            <i class="fas fa-file-alt text-slate-400 text-xl mb-2"></i>
-                            <span class="text-sm font-medium text-slate-700">Articles</span>
+                <!-- Quick Links -->
+                <Card title="Raccourcis">
+                    <div class="grid grid-cols-2 gap-3">
+                        <Link :href="route('admin.news')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-xl hover:bg-blue-50 hover:border-blue-200 transition-all group">
+                            <div class="w-10 h-10 rounded-lg bg-slate-100 group-hover:bg-blue-100 flex items-center justify-center mb-2 transition-colors">
+                                <i class="fas fa-file-alt text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-600 group-hover:text-blue-700 transition-colors">Articles</span>
                         </Link>
-                        <Link :href="route('admin.services.medical')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
-                            <i class="fas fa-stethoscope text-slate-400 text-xl mb-2"></i>
-                            <span class="text-sm font-medium text-slate-700">Services</span>
+                        <Link :href="route('admin.services.medical')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-xl hover:bg-blue-50 hover:border-blue-200 transition-all group">
+                            <div class="w-10 h-10 rounded-lg bg-slate-100 group-hover:bg-blue-100 flex items-center justify-center mb-2 transition-colors">
+                                <i class="fas fa-stethoscope text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-600 group-hover:text-blue-700 transition-colors">Services</span>
                         </Link>
-                        <Link :href="route('admin.setting')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
-                            <i class="fas fa-cog text-slate-400 text-xl mb-2"></i>
-                            <span class="text-sm font-medium text-slate-700">Paramètres</span>
+                        <Link :href="route('admin.setting')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-xl hover:bg-blue-50 hover:border-blue-200 transition-all group">
+                            <div class="w-10 h-10 rounded-lg bg-slate-100 group-hover:bg-blue-100 flex items-center justify-center mb-2 transition-colors">
+                                <i class="fas fa-cog text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-600 group-hover:text-blue-700 transition-colors">Paramètres</span>
                         </Link>
-                        <Link :href="route('profile.edit')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
-                            <i class="fas fa-shield-alt text-slate-400 text-xl mb-2"></i>
-                            <span class="text-sm font-medium text-slate-700">Sécurité</span>
+                        <Link :href="route('profile.edit')" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-xl hover:bg-blue-50 hover:border-blue-200 transition-all group">
+                            <div class="w-10 h-10 rounded-lg bg-slate-100 group-hover:bg-blue-100 flex items-center justify-center mb-2 transition-colors">
+                                <i class="fas fa-shield-alt text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-600 group-hover:text-blue-700 transition-colors">Sécurité</span>
                         </Link>
                     </div>
-                </div>
+                </Card>
 
-                <div class="bg-blue-600 rounded-lg shadow-sm p-6 text-white">
-                    <h3 class="text-lg font-medium mb-2">Documentation</h3>
-                    <p class="text-blue-100 text-sm mb-4">Consultez le guide d'utilisation pour maîtriser toutes les fonctionnalités de l'administration.</p>
-                    <button class="w-full bg-white text-blue-600 px-4 py-2 rounded font-medium text-sm hover:bg-blue-50 transition-colors">
-                        Lire le manuel
-                    </button>
+                <!-- Documentation Panel -->
+                <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl shadow-lg shadow-blue-600/20 p-6 text-white overflow-hidden relative">
+                    <div class="absolute -right-6 -bottom-6 text-blue-500/20">
+                        <i class="fas fa-book-open text-[80px]"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="text-lg font-bold mb-2">Documentation</h3>
+                        <p class="text-blue-100 text-sm leading-relaxed mb-5">Consultez le guide d'utilisation pour maîtriser toutes les fonctionnalités.</p>
+                        <button class="w-full bg-white/90 backdrop-blur text-blue-700 px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-white transition-colors shadow-sm">
+                            Lire le manuel
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -30,6 +30,7 @@ const form = useForm({
     location: '',
     working_hours: '',
     active: true,
+    featured: false,
     equipments: '',
     image: null,
     leader_photo: null,
@@ -62,6 +63,7 @@ const openModal = (service = null) => {
         form.location = service.location || '';
         form.working_hours = service.working_hours || '';
         form.active = !!service.active;
+        form.featured = !!service.featured;
         form.equipments = Array.isArray(service.equipments) ? service.equipments.join(', ') : (service.equipments || '');
         
         let team = service.team_members;
@@ -177,8 +179,13 @@ const removeTeamMember = (index) => {
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span v-if="service.active" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Actif</span>
-                                <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">Inactif</span>
+                                <div class="flex items-center gap-2">
+                                    <span v-if="service.active" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Actif</span>
+                                    <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">Inactif</span>
+                                    <span v-if="service.featured" class="px-2 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-700">
+                                        <i class="fas fa-star text-[10px]"></i> Accueil
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <button @click="openModal(service)" class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
@@ -269,9 +276,17 @@ const removeTeamMember = (index) => {
                                         <label class="block text-sm font-medium text-slate-700 mb-1">Équipements (séparés par des virgules)</label>
                                         <input v-model="form.equipments" type="text" placeholder="Ex: Scanner, Bloc opératoire" class="w-full border-slate-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                     </div>
-                                    <div class="flex items-center pt-6">
-                                        <input v-model="form.active" id="active" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded">
-                                        <label for="active" class="ml-2 block text-sm text-slate-700">Service actif et visible</label>
+                                    <div class="space-y-3 pt-6">
+                                        <div class="flex items-center">
+                                            <input v-model="form.active" id="active" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded">
+                                            <label for="active" class="ml-2 block text-sm text-slate-700">Service actif et visible</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input v-model="form.featured" id="featured" type="checkbox" class="h-4 w-4 text-amber-500 focus:ring-amber-500 border-slate-300 rounded">
+                                            <label for="featured" class="ml-2 block text-sm text-slate-700">
+                                                <i class="fas fa-star text-amber-400 mr-1"></i>Mis en avant sur l'accueil
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

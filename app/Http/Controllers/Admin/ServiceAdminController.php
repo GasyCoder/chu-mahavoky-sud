@@ -48,6 +48,7 @@ class ServiceAdminController extends Controller
             'location' => 'nullable|string|max:255',
             'working_hours' => 'nullable|string|max:255',
             'active' => 'boolean',
+            'featured' => 'boolean',
             'equipments' => 'nullable|string', // Comma separated
         ];
 
@@ -71,6 +72,7 @@ class ServiceAdminController extends Controller
             'location' => $validated['location'],
             'working_hours' => $validated['working_hours'],
             'active' => $validated['active'] ?? true,
+            'featured' => $validated['featured'] ?? false,
             'equipments' => $validated['equipments'] ? array_map('trim', explode(',', $validated['equipments'])) : [],
         ];
 

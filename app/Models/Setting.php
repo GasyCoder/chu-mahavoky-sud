@@ -110,12 +110,39 @@ class Setting extends Model
             $faviconUrl = asset('assets/logo.png');
         }
 
+        $heroBg = self::get('hero_background');
+        $heroBgUrl = null;
+        if ($heroBg && file_exists(storage_path('app/public/' . $heroBg))) {
+            $heroBgUrl = asset('storage/' . $heroBg);
+        }
+
         return [
             ...self::getArray('general'),
             'logo' => $logoUrl,
             'favicon' => $faviconUrl,
             ...self::getArray('header'),
+            'hero_background' => $heroBgUrl,
+            'hero_title' => self::get('hero_title', ''),
+            'hero_subtitle' => self::get('hero_subtitle', ''),
+            'presentation_video' => self::get('presentation_video', ''),
+            'services_section' => [
+                'label' => self::get('services_section_label', 'Nos Spécialités'),
+                'title' => self::get('services_section_title', 'Excellence en Soins de Santé'),
+                'description' => self::get('services_section_description', 'Notre établissement propose une gamme complète de spécialités médicales avec des équipements modernes et une équipe de professionnels qualifiés.'),
+            ],
+            'stats' => [
+                'doctors' => self::get('stat_doctors', '47'),
+                'services' => self::get('stat_services', '12'),
+                'beds' => self::get('stat_beds', '150'),
+                'emergency' => self::get('stat_emergency', '24h/7j'),
+            ],
+            'show_stats_section' => filter_var(self::get('show_stats_section', true), FILTER_VALIDATE_BOOLEAN),
+            'show_services_section' => filter_var(self::get('show_services_section', true), FILTER_VALIDATE_BOOLEAN),
+            'show_about_section' => filter_var(self::get('show_about_section', true), FILTER_VALIDATE_BOOLEAN),
+            'show_emergency_section' => filter_var(self::get('show_emergency_section', true), FILTER_VALIDATE_BOOLEAN),
             'show_experts_section' => filter_var(self::get('show_experts_section', false), FILTER_VALIDATE_BOOLEAN),
+            'show_infrastructure_section' => filter_var(self::get('show_infrastructure_section', true), FILTER_VALIDATE_BOOLEAN),
+            'show_news_section' => filter_var(self::get('show_news_section', true), FILTER_VALIDATE_BOOLEAN),
             'show_partners_section' => filter_var(self::get('show_partners_section', true), FILTER_VALIDATE_BOOLEAN),
             'contact' => [
                 'phone' => self::get('contact_phone'),

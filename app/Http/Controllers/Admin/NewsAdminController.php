@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
@@ -39,7 +40,7 @@ class NewsAdminController extends Controller
 
         return Inertia::render('Admin/News/Index', [
             'blogs' => $blogs,
-            'categories' => Blog::categories(),
+            'categories' => BlogCategory::active()->ordered()->pluck('name', 'name')->toArray(),
             'statuses' => Blog::statuses(),
             'filters' => $request->only(['search', 'category', 'status', 'sortField', 'sortDirection', 'perPage']),
         ]);

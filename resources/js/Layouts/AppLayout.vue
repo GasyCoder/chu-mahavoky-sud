@@ -81,7 +81,7 @@ onMounted(() => {
         />
 
         <!-- Page Content -->
-        <main class="relative overflow-hidden">
+        <main class="relative overflow-hidden pt-[120px]">
             <slot />
         </main>
 
