@@ -67,8 +67,7 @@ const deletePartner = (partner) => {
             </button>
         </template>
 
-        <div class="max-w-6xl mx-auto">
-            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
                 <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                     <div>
                         <h2 class="text-lg font-black text-slate-900 tracking-tight">Liste des Partenaires</h2>
@@ -141,60 +140,63 @@ const deletePartner = (partner) => {
                     </table>
                 </div>
             </div>
-        </div>
 
         <!-- Modal (Agrandie pour une meilleure UX) -->
         <div id="partner-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md hidden p-4">
-            <div class="bg-white rounded-[2.5rem] shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-300">
-                <div class="px-10 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                    <h3 class="text-xl font-black text-slate-900 tracking-tight">
+            <div class="bg-white rounded-lg shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+                <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
+                    <h3 class="text-lg font-medium text-slate-900">
                         {{ isEditing ? 'Modifier Partenaire' : 'Ajouter un Partenaire' }}
                     </h3>
-                    <button @click="closeModal" class="w-8 h-8 rounded-full bg-slate-200/50 text-slate-500 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center">
+                    <button @click="closeModal" class="text-slate-400 hover:text-slate-500 transition-colors">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 
-                <form @submit.prevent="submit" class="p-10 space-y-6">
-                    <div class="grid grid-cols-1 gap-6">
+                <form @submit.prevent="submit">
+                    <div class="px-6 py-6 space-y-5 bg-slate-50 max-h-[70vh] overflow-y-auto">
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Nom de l'organisation</label>
-                            <input v-model="form.name" type="text" class="w-full px-5 py-3 bg-slate-50 border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none text-sm font-bold text-slate-700" placeholder="Ex: Ministère de la Santé" required>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Nom de l'organisation <span class="text-red-500">*</span></label>
+                            <input v-model="form.name" type="text" class="w-full border-slate-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Ex: Ministère de la Santé" required>
                         </div>
                         
-                        <div class="p-6 bg-blue-50/30 rounded-3xl border border-dashed border-blue-200">
-                            <label class="block text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4">Logo officiel</label>
-                            <input type="file" @input="form.logo = $event.target.files[0]" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-6 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
-                            <p class="mt-2 text-[10px] text-blue-400 font-medium italic">Format PNG transparent recommandé (Max 2Mo)</p>
-                        </div>
-
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Lien du site Web</label>
-                            <div class="relative">
-                                <i class="fas fa-link absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
-                                <input v-model="form.link" type="url" class="w-full pl-11 pr-5 py-3 bg-slate-50 border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none text-sm font-bold text-slate-700" placeholder="https://www.exemple.com">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Logo officiel</label>
+                            <div class="p-4 bg-white rounded-md border border-dashed border-slate-300">
+                                <input type="file" @input="form.logo = $event.target.files[0]" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-slate-50 file:text-slate-700 hover:file:bg-slate-100 cursor-pointer">
+                                <p class="mt-2 text-[10px] text-slate-400 italic">Format PNG transparent recommandé (Max 2Mo)</p>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Lien du site Web</label>
+                            <div class="relative">
+                                <i class="fas fa-link absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input v-model="form.link" type="url" class="w-full pl-9 border-slate-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="https://www.exemple.com">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Ordre d'affichage</label>
-                                <input v-model="form.order" type="number" class="w-full px-5 py-3 bg-slate-50 border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none text-sm font-bold text-slate-700">
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Ordre d'affichage</label>
+                                <input v-model="form.order" type="number" class="w-full border-slate-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </div>
                             <div class="flex items-center mt-6">
                                 <label class="flex items-center cursor-pointer group">
-                                    <input v-model="form.is_active" type="checkbox" class="w-5 h-5 rounded-lg border-slate-300 text-blue-600 shadow-sm focus:ring-blue-500 focus:ring-offset-0 transition-all">
-                                    <span class="ml-3 text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-blue-600 transition-colors">Partenaire Actif</span>
+                                    <input v-model="form.is_active" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded">
+                                    <span class="ml-2 text-sm text-slate-600 group-hover:text-slate-900 transition-colors">Partenaire Actif</span>
                                 </label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-6 flex justify-end gap-4 border-t border-slate-100">
-                        <button type="button" @click="closeModal" class="px-6 py-3 text-xs font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors">Annuler</button>
-                        <button type="submit" :disabled="form.processing" class="px-10 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-200 transition-all active:scale-95 disabled:opacity-50">
+                    <div class="bg-slate-100 px-6 py-3 sm:flex sm:flex-row-reverse border-t border-slate-200">
+                        <button type="submit" :disabled="form.processing" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto disabled:opacity-50 transition-all">
                             <i v-if="form.processing" class="fas fa-circle-notch fa-spin mr-2"></i>
-                            {{ isEditing ? 'Mettre à jour' : 'Enregistrer le partenaire' }}
+                            {{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
+                        </button>
+                        <button type="button" @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-slate-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto transition-all">
+                            Annuler
                         </button>
                     </div>
                 </form>
