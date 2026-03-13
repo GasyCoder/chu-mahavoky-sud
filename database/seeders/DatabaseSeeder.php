@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             BlogSeeder::class,
             SettingsSeeder::class,
+            EquipmentSeeder::class,
         ]);
     }
 }
