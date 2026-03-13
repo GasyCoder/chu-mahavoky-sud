@@ -23,11 +23,9 @@
             <div class="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-secondary/5 rounded-full blur-3xl"></div>
 
             <div class="w-full sm:max-w-md z-10 flex flex-col items-center">
-                <!-- Logo Centered -->
+                <!-- Logo Centered (x-application-logo already has an <a>) -->
                 <div class="mb-8 transition-transform duration-500 hover:scale-105">
-                    <a href="/">
-                        <x-application-logo class="w-24 h-24 drop-shadow-sm mx-auto" />
-                    </a>
+                    <x-application-logo class="w-auto h-16 drop-shadow-sm flex flex-col items-center gap-4" />
                 </div>
 
                 <!-- Login Card -->
